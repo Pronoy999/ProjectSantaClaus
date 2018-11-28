@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".Activities.HomeActivityMarket"
+    tools:showIn="@layout/activity_home_market">
+
+    <LinearLayout
+        android:id="@+id/diag_srch_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp">
+
+        <android.support.design.button.MaterialButton
+            android:id="@+id/gotoDigButton"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:insetLeft="4dp"
+            android:insetRight="4dp"
+            android:text="Diagnostics"
+            android:textColor="@color/primary_light" />
+
+        <SearchView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:id="@+id/homeSearchView"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/border"
+            android:iconifiedByDefault="false" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/deals_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/diag_srch_layout">
+
+        <android.support.design.button.MaterialButton
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:insetLeft="4dp"
+            android:insetRight="4dp"
+            android:text="Hot Deals"
+            android:textColor="@color/primary_light" />
+
+        <android.support.design.button.MaterialButton
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:insetLeft="4dp"
+            android:insetRight="4dp"
+            android:text="EXCHANGE\nPROGRAM"
+            android:textColor="@color/primary_light" />
+
+        <android.support.design.button.MaterialButton
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:insetLeft="4dp"
+            android:insetRight="4dp"
+            android:text="BUY AT\nHYPERXCHANGE"
+            android:textColor="@color/primary_light" />
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/product_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="ifContentScrolls"
+        app:layout_constraintTop_toBottomOf="@id/deals_bar">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <android.support.design.button.MaterialButton
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:id="@+id/homeMobileCat"
+                android:layout_height="match_parent"
+                android:insetLeft="4dp"
+                android:insetRight="4dp"
+                android:text="Mobile"
+                android:textColor="@color/primary_light" />
+
+            <android.support.design.button.MaterialButton
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:insetLeft="4dp"
+                android:insetRight="4dp"
+                android:text="Laptops"
+                android:textColor="@color/primary_light" />
+
+            <android.support.design.button.MaterialButton
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:insetLeft="4dp"
+                android:insetRight="4dp"
+                android:text="Tablets"
+                android:textColor="@color/primary_light" />
+
+            <android.support.design.button.MaterialButton
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:insetLeft="4dp"
+                android:insetRight="4dp"
+                android:text="Camera"
+                android:textColor="@color/primary_light" />
+
+            <android.support.design.button.MaterialButton
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:insetLeft="4dp"
+                android:insetRight="4dp"
+                android:text="Accessories"
+                android:textColor="@color/primary_light" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <com.synnapps.carouselview.CarouselView
+        android:id="@+id/carouselView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_bar"
+        app:layout_constraintTop_toBottomOf="@id/product_bar"
+        app:pageColor="#00000000"
+        app:radius="6dp"
+        app:slideInterval="5000"
+        app:strokeColor="#FF777777"
+        app:strokeWidth="1dp" />
+
+    <HorizontalScrollView
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_dark"
+        android:overScrollMode="ifContentScrolls"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="72dp"
+            android:gravity="center"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:text="Free\nShipping"
+                android:textAlignment="center"
+                android:textColor="@color/primary_light"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:text="24/7\nSupport"
+                android:textAlignment="center"
+                android:textColor="@color/primary_light"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:text="15 Days\nReplacement"
+                android:textAlignment="center"
+                android:textColor="@color/primary_light"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="100% Secure\nPayment"
+                android:textAlignment="center"
+                android:textColor="@color/primary_light"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+
+</android.support.constraint.ConstraintLayout>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
