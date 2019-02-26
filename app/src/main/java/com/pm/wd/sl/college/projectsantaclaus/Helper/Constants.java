@@ -12,5 +12,5 @@ public class Constants {
      * JSON Constants.
      */
     public static final String JSON_PHONE_NUMBER = "phoneNumber";
-
+    public static final String JSON_RESPONSE="res";
 }

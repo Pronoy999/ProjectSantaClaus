@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.pm.wd.sl.college.projectsantaclaus.Helper.ParamsCreator;
 import com.pm.wd.sl.college.projectsantaclaus.Objects.DigitText;
 import com.pm.wd.sl.college.projectsantaclaus.R;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
@@ -83,7 +85,10 @@ public class LoginActivity extends AppCompatActivity implements HTTPConnector.Re
         _requestOTP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (!(TextUtils.isEmpty(_mobileNumber.getText().toString())) &&
+                        _mobileNumber.getText().toString().length() == 10) {
+                    requestOTP(_mobileNumber.getText().toString());
+                }
             }
         });
     }
@@ -172,6 +177,17 @@ public class LoginActivity extends AppCompatActivity implements HTTPConnector.Re
     @Override
     public void onResponse(JSONObject response) {
         _progressDialog.dismiss();
+        try {
+            String responseText = response.getString(Constants.JSON_RESPONSE);
+            if (responseText.equalsIgnoreCase("OTP Send.") ||
+                    responseText.equalsIgnoreCase("New OTP Send.")) {
+                Messages.toast(getApplicationContext(), "OTP SEND.");
+            } else {
+                Messages.toast(getApplicationContext(), "Something went wrong.");
+            }
+        } catch (JSONException e) {
+            Messages.l(TAG_CLASS, e.getStackTrace().toString());
+        }
     }
 
     @Override
