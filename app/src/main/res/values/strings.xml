@@ -13,4 +13,5 @@
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="new_join_now">New? Join Now</string>
+    <string name="title_activity_messages">MessagesActivity</string>
 </resources>
