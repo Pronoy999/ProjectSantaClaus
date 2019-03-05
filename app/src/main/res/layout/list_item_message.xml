@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.pm.wd.sl.college.projectsantaclaus.Objects.SquareImageView
+        android:id="@+id/msgImageView"
+        android:layout_width="128dp"
+        android:layout_height="0dp"
+        android:padding="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_launcher_background" />
+
+    <TextView
+        android:id="@+id/msgFNameView"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:textSize="24sp"
+        app:layout_constraintLeft_toRightOf="@id/msgImageView"
+        app:layout_constraintRight_toLeftOf="@id/msgDateView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Firstname" />
+
+    <TextView
+        android:id="@+id/msgLNameView"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toRightOf="@id/msgImageView"
+        app:layout_constraintRight_toLeftOf="@id/msgTimeView"
+        app:layout_constraintTop_toBottomOf="@id/msgFNameView"
+        tools:text="Lastname" />
+
+    <TextView
+        android:id="@+id/msgTimeView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="@id/msgFNameView"
+        app:layout_constraintLeft_toRightOf="@id/msgFNameView"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="12:30 AM" />
+
+    <TextView
+        android:id="@+id/msgDateView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp"
+        app:layout_constraintLeft_toRightOf="@id/msgLNameView"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/msgTimeView"
+        tools:text="14/10/18" />
+
+    <TextView
+        android:id="@+id/msgMsgView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:maxLines="4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/msgImageView"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/msgLNameView"
+        tools:text="Firstname Lastname\nsddsdadsad" />
+
+</android.support.constraint.ConstraintLayout>
