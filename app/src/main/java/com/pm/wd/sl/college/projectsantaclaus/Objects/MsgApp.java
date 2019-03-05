@@ -8,7 +8,7 @@ import java.util.List;
 public class MsgApp extends Application {
     private static MsgApp instance;
     public final List<Message> messages = new ArrayList<>();
-    //    public MessageAdapter msgAdapter;
+    public MessageAdapter msgAdapter;
     public User user;
     public List<MessageRefresh> msgRefresh = new ArrayList<>();
 

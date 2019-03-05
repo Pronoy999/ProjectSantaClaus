@@ -8,6 +8,7 @@ public class Message {
     String url;
     String date;
     String time;
+    User sender;
 
     public Message(int id, String sendr_uid, String recvr_uid, String msg, String url, String date, String time) {
         this.id = id;
@@ -23,6 +24,11 @@ public class Message {
     public String getDate() {
         return date;
     }
+
+    public User getSender() {
+        return sender;
+    }
+
 
     public Message setDate(String date) {
         this.date = date;
