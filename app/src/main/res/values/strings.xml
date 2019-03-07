@@ -14,4 +14,5 @@
     <string name="cancel">Cancel</string>
     <string name="new_join_now">New? Join Now</string>
     <string name="title_activity_messages">MessagesActivity</string>
+    <string name="title_activity_conversation">ConversationActivity</string>
 </resources>

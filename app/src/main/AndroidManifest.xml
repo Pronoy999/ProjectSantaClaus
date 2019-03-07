@@ -10,10 +10,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Activities.NewMessageActivity"></activity>
+        <activity
+            android:name=".Activities.ConversationActivity"
+            android:label="@string/title_activity_conversation"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.MessagesActivity"
             android:label="@string/title_activity_messages"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activities.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
