@@ -1,7 +1,6 @@
 package com.pm.wd.sl.college.projectsantaclaus.Objects;
 
 public class User {
-    String uid;
     String first_name;
     String last_name;
     String email;
@@ -9,8 +8,7 @@ public class User {
     String reg_date;
     String reg_time;
 
-    public User(String uid, String first_name, String last_name, String email, String phone, String reg_date, String reg_time) {
-        this.uid = uid;
+    public User(String first_name, String last_name, String email, String phone, String reg_date, String reg_time) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.email = email;
@@ -34,15 +32,6 @@ public class User {
 
     public User setRegTime(String reg_time) {
         this.reg_time = reg_time;
-        return this;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public User setUid(String uid) {
-        this.uid = uid;
         return this;
     }
 

@@ -15,4 +15,8 @@ public class Constants {
      */
     public static final String JSON_PHONE_NUMBER = "phoneNumber";
     public static final String JSON_RESPONSE = "res";
+    public static final String FIRST_NAME="first_name";
+    public static final String LAST_NAME="last_name";
+    public static final String PHONE="phone";
+    public static final String EMAIL="email";
 }

@@ -5,7 +5,6 @@
     <string name="email">Email</string>
     <string name="mobile">Mobile</string>
     <string name="last_name">Last Name</string>
-    <string name="first_name">First Name</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="mobile_number">Mobile Number</string>
@@ -15,4 +14,5 @@
     <string name="new_join_now">New? Join Now</string>
     <string name="title_activity_messages">MessagesActivity</string>
     <string name="title_activity_conversation">ConversationActivity</string>
+    <string name="first_name">First Name</string>
 </resources>

@@ -22,7 +22,7 @@ public class ConversationAdapter extends ArrayAdapter<Message> {
         boolean send_msg = true;
         Message msg = getItem(position);
         if (msg != null) {
-            send_msg = msg.getSendrUid().equals(MsgApp.instance().user.getUid());
+            send_msg = msg.getSendrUid().equals(MsgApp.instance().user.getEmail());
         }
 
         ViewHolder vh;
