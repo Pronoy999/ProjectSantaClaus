@@ -33,7 +33,7 @@ public class AWSHelper {
      * @param context: The Application context.
      * @return s3Client.
      */
-    public AmazonS3Client getS3Client(Context context) {
+    private AmazonS3Client getS3Client(Context context) {
         if (s3Client == null) {
             s3Client = new AmazonS3Client(getCredentialsProvider(context));
             s3Client.setRegion(Region.getRegion(Regions.fromName(Constants.AWS_REGION)));
