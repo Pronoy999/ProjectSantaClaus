@@ -2,8 +2,11 @@ package com.pm.wd.sl.college.projectsantaclaus.Activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.button.MaterialButton;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -30,7 +33,8 @@ import java.util.List;
 
 public class LoginActivity extends AppCompatActivity implements HTTPConnector.ResponseListener {
     private EditText _mobileNumber;
-    private Button _requestOTP, _confirmButton, _cancelButton;
+    private MaterialButton _confirmButton, _requestOTP;
+    private Button _cancelButton, _registerButton;
     private List<DigitText> mDigitViews;
     private String pinNumber;
     private char[] mOTPChars = {Constants.DEFAULT_OTP_CHAR,
@@ -91,6 +95,25 @@ public class LoginActivity extends AppCompatActivity implements HTTPConnector.Re
                 }
             }
         });
+        _confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pinNumber = new String(mOTPChars);
+                checkPin();
+            }
+        });
+        _cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        _registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+            }
+        });
     }
 
     /**
@@ -104,6 +127,7 @@ public class LoginActivity extends AppCompatActivity implements HTTPConnector.Re
         _mobileNumber = findViewById(R.id.userPhone);
         _requestOTP = findViewById(R.id.requestOTP);
         _confirmButton = findViewById(R.id.confirmOTP);
+        _registerButton = findViewById(R.id.registerNew);
         _cancelButton = findViewById(R.id.cancelOTPButton);
         _otpLayout = findViewById(R.id.otpLayout);
         _progressDialog = new ProgressDialog(this);
@@ -163,9 +187,18 @@ public class LoginActivity extends AppCompatActivity implements HTTPConnector.Re
      * Method to check the OTP.
      */
     private void checkPin() {
-
+        String url = Constants.API_URL + "?key=" + Constants.API_TOKEN +
+                "&phoneNumber=%2B91" + _mobileNumber.getText().toString() + "&otp=" + pinNumber;
+        connector = new HTTPConnector(this, url, this);
+        currentCode = Constants.OTP_VERFIY_CODE;
+        _progressDialog.show();
     }
 
+    /**
+     * Method to request OTP.
+     *
+     * @param phoneNumber: The Phone Number where the OTP is to be send.
+     */
     private void requestOTP(String phoneNumber) {
         String url = Constants.API_URL + "otp?key=" + Constants.API_TOKEN;
         connector = new HTTPConnector(getApplicationContext(), url, this);
@@ -174,16 +207,36 @@ public class LoginActivity extends AppCompatActivity implements HTTPConnector.Re
         currentCode = Constants.OTP_REQUEST_CODE;
     }
 
+    /**
+     * Method to change the Activity.
+     */
+    private void changeActivity() {
+        SharedPreferences preferences = getSharedPreferences(Constants.SHARED_PREFERENCE_NAME,
+                MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(Constants.IS_LOGGED_IN, true);
+        editor.apply();
+        //TODO: Change the Activity after Successful OTP.
+    }
+
     @Override
     public void onResponse(JSONObject response) {
         _progressDialog.dismiss();
         try {
-            String responseText = response.getString(Constants.JSON_RESPONSE);
-            if (responseText.equalsIgnoreCase("OTP Send.") ||
-                    responseText.equalsIgnoreCase("New OTP Send.")) {
-                Messages.toast(getApplicationContext(), "OTP SEND.");
-            } else {
-                Messages.toast(getApplicationContext(), "Something went wrong.");
+            if (currentCode == Constants.OTP_REQUEST_CODE) {
+                String responseText = response.getString(Constants.JSON_RESPONSE);
+                if (responseText.equalsIgnoreCase("OTP Send.") ||
+                        responseText.equalsIgnoreCase("New OTP Send.")) {
+                    Messages.toast(getApplicationContext(), "OTP SEND.");
+                } else {
+                    Messages.toast(getApplicationContext(), "Something went wrong.");
+                }
+            } else if (currentCode == Constants.OTP_VERFIY_CODE) {
+                if (response.getBoolean(Constants.JSON_RESPONSE)) {
+                    changeActivity();
+                } else {
+                    Messages.toast(getApplicationContext(), "Please enter a valid OTP.");
+                }
             }
         } catch (JSONException e) {
             Messages.l(TAG_CLASS, e.getStackTrace().toString());
