@@ -105,7 +105,7 @@ public class LoginActivity extends AppCompatActivity implements HTTPConnector.Re
         _cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: Finish.
+                finish();
             }
         });
         _registerButton.setOnClickListener(new View.OnClickListener() {
