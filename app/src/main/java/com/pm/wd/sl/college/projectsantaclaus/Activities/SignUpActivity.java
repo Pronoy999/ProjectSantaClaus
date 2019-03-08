@@ -2,6 +2,7 @@ package com.pm.wd.sl.college.projectsantaclaus.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
 import android.support.v7.app.AppCompatActivity;
@@ -96,6 +97,14 @@ public class SignUpActivity extends AppCompatActivity implements HTTPConnector.R
         try {
             if (response.getBoolean(Constants.JSON_RESPONSE)) {
                 Messages.toast(getApplicationContext(), "User added Successfully.");
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateSharedPreferences();
+                    }
+                });
+                thread.start();
+                //TODO: Change to User Home Activity.
                 startActivity(new Intent(SignUpActivity.this,
                         LoginActivity.class));
             }
@@ -109,5 +118,15 @@ public class SignUpActivity extends AppCompatActivity implements HTTPConnector.R
         _progressDialog.dismiss();
         Messages.toast(getApplicationContext(), "Something went wrong.");
         Messages.l(TAG_CLASS, error.toString());
+    }
+
+    /**
+     * Method to updated the shared Preferences.
+     */
+    private void updateSharedPreferences() {
+        SharedPreferences sharedPreference = getSharedPreferences(Constants.SHARED_PREFERENCE_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreference.edit();
+        editor.putBoolean(Constants.IS_LOGGED_IN, true);
+        editor.apply();
     }
 }
