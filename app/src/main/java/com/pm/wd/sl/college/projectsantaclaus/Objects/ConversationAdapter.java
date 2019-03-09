@@ -11,9 +11,11 @@ import android.widget.TextView;
 
 import com.pm.wd.sl.college.projectsantaclaus.R;
 
+import java.util.List;
+
 public class ConversationAdapter extends ArrayAdapter<Message> {
-    public ConversationAdapter(@NonNull Context context, int resource) {
-        super(context, resource);
+    public ConversationAdapter(Context context, int resource, List<Message> objects) {
+        super(context, resource, objects);
     }
 
     @NonNull

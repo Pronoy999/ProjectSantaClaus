@@ -14,9 +14,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.pm.wd.sl.college.projectsantaclaus.R;
 
+import java.util.List;
+
 public class MessageAdapter extends ArrayAdapter<Message> {
-    public MessageAdapter(@NonNull Context context, int resource) {
-        super(context, resource);
+
+    public MessageAdapter(@NonNull Context context, int resource, @NonNull List<Message> objects) {
+        super(context, resource, objects);
     }
 
     @NonNull
@@ -53,8 +56,6 @@ public class MessageAdapter extends ArrayAdapter<Message> {
                     .apply(new RequestOptions().circleCrop())
                     .into(viewH._img);
         }
-
-        // todo open mssage on click
 
         return convertView;
     }

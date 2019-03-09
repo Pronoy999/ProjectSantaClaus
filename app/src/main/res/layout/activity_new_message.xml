@@ -7,7 +7,27 @@
     android:padding="16dp"
     tools:context=".Activities.NewMessageActivity">
 
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/toReceiverIL"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/toReceiverEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="To:"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/colorAccent"
+            android:textSize="20sp"
+            tools:text="xx@dd.cc" />
+    </android.support.design.widget.TextInputLayout>
+
     <ImageView
+        android:id="@+id/newMsgImageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:padding="64dp"
@@ -15,7 +35,7 @@
         app:layout_constraintBottom_toTopOf="@id/msgEditView"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/toReceiverIL" />
 
     <LinearLayout
         android:id="@+id/msgEditView"
@@ -25,13 +45,16 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <EditText
+            android:id="@+id/newMsgEditText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:textSize="20sp"
+            android:hint="Type your message..."
             tools:text="HI HELLO STATRUS" />
 
         <com.pm.wd.sl.college.projectsantaclaus.Objects.SquareImageView
+            android:id="@+id/newMsgSendButton"
             style="?attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
