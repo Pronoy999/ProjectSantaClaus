@@ -3,5 +3,5 @@
     <solid
         android:angle="270"
         android:color="@color/colorPrimaryDark" />
-    <corners android:radius="64dp" />
+    <corners android:radius="32dp" />
 </shape>

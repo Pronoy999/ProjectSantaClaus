@@ -1,26 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="start"
+    android:paddingStart="8dp"
+    android:paddingTop="4dp"
+    android:paddingEnd="8dp"
+    android:paddingBottom="4dp">
 
     <TextView
         android:id="@+id/msgTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
         android:background="@drawable/msg_back"
+        android:ellipsize="none"
         android:gravity="center_vertical"
+        android:maxLines="100"
         android:paddingStart="32dp"
-        android:paddingTop="8dp"
+        android:paddingTop="20dp"
         android:paddingEnd="32dp"
-        android:paddingBottom="8dp"
+        android:paddingBottom="20dp"
+        android:scrollHorizontally="false"
         android:textColor="@android:color/white"
         android:textSize="20sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:text="Some MESSAGE" />
+        tools:text="Some MESSAasd" />
 
     <ImageButton
         android:id="@+id/attachImage"
@@ -30,10 +36,9 @@
         android:layout_margin="4dp"
         android:background="@drawable/msg_back"
         android:backgroundTint="@color/colorAccent"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
         android:src="@drawable/ic_attach"
-        android:tint="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/msgTextView"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:tint="@android:color/white" />
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
