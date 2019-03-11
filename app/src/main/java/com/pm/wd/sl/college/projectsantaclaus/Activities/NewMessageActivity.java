@@ -81,8 +81,7 @@ public class NewMessageActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             String filename = String.format(Locale.getDefault(), "temp_%d", System.currentTimeMillis());
-                            try (ParcelFileDescriptor pfd = getContentResolver().openFileDescriptor(uri, "r")
-                            ) {
+                            try (ParcelFileDescriptor pfd = getContentResolver().openFileDescriptor(uri, "r")) {
                                 if (pfd != null) {
                                     File outputFile = new File(getFilesDir(), filename);
                                     try (FileOutputStream fos = new FileOutputStream(outputFile)) {
