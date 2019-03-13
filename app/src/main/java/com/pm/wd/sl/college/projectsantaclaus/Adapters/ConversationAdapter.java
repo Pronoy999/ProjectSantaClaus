@@ -1,4 +1,4 @@
-package com.pm.wd.sl.college.projectsantaclaus.Objects;
+package com.pm.wd.sl.college.projectsantaclaus.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.pm.wd.sl.college.projectsantaclaus.Objects.Message;
+import com.pm.wd.sl.college.projectsantaclaus.Objects.MsgApp;
 import com.pm.wd.sl.college.projectsantaclaus.R;
 
 import java.util.List;

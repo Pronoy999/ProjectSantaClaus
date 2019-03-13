@@ -11,7 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.pm.wd.sl.college.projectsantaclaus.Objects.Message;
-import com.pm.wd.sl.college.projectsantaclaus.Objects.MessageAdapter;
+import com.pm.wd.sl.college.projectsantaclaus.Adapters.MessageAdapter;
 import com.pm.wd.sl.college.projectsantaclaus.Objects.MsgApp;
 import com.pm.wd.sl.college.projectsantaclaus.R;
 

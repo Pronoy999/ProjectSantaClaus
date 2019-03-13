@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ListView;
 
-import com.pm.wd.sl.college.projectsantaclaus.Objects.ConversationAdapter;
+import com.pm.wd.sl.college.projectsantaclaus.Adapters.ConversationAdapter;
 import com.pm.wd.sl.college.projectsantaclaus.Objects.Message;
 import com.pm.wd.sl.college.projectsantaclaus.R;
 
