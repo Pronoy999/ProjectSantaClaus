@@ -11,7 +11,7 @@ public class Constants {
 
     public static final int OTP_REQUEST_CODE = 1;
     public static final int OTP_VERFIY_CODE = 2;
-
+    public static final int NEW_MESSAGE_ACTIVITY_CODE=3;
     /**
      * JSON Constants.
      */
@@ -21,6 +21,13 @@ public class Constants {
     public static final String LAST_NAME = "last_name";
     public static final String PHONE = "phone";
     public static final String EMAIL = "email";
+    public static final String JSON_ID = "id";
+    public static final String SENDER_EMAIl = "sender_email";
+    public static final String RECEIVER_EMAIL = "receiver_email";
+    public static final String MESSAGE = "message";
+    public static final String MESSAGE_URL = "url";
+    public static final String MESSAGE_DATE = "message_date";
+    public static final String MESSAGE_TIME = "message_time";
 
     /**
      * AWS Constants.
@@ -28,5 +35,5 @@ public class Constants {
     public static final String AWS_BUCKET_NAME = "santa-claus";
     public static final String AWS_COGNITO_POOL_ID = "ap-south-1:af502823-ceca-4eb0-bea6-62ca289aa19a";
     public static final String AWS_REGION = Regions.AP_SOUTH_1.getName();
-    public static final String AWS_STATE_COMPLETED="COMPLETED";
+    public static final String AWS_STATE_COMPLETED = "COMPLETED";
 }

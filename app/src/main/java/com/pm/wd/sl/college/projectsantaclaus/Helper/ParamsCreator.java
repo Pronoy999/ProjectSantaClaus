@@ -1,5 +1,7 @@
 package com.pm.wd.sl.college.projectsantaclaus.Helper;
 
+import com.pm.wd.sl.college.projectsantaclaus.Objects.Message;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,6 +41,23 @@ public class ParamsCreator {
             jsonObject.put(Constants.EMAIL, email);
             jsonObject.put(Constants.PHONE, phone);
         } catch (JSONException e) {
+            Messages.l(TAG_CLASS, e.toString());
+        }
+        return jsonObject;
+    }
+
+    /**
+     * Method to make the Params for fetching the recent Messages.
+     *
+     * @param emailID: The Email Id of the owner.
+     * @return jsonObject.
+     */
+    public static JSONObject createParamsForRecentMessages(String emailID) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put(Constants.EMAIL, emailID);
+        } catch (JSONException e) {
+            e.printStackTrace();
             Messages.l(TAG_CLASS, e.toString());
         }
         return jsonObject;
