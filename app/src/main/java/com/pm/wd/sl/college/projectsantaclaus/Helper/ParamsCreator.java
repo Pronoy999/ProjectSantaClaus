@@ -62,4 +62,27 @@ public class ParamsCreator {
         }
         return jsonObject;
     }
+
+    /**
+     * Method to create params for New Message.
+     *
+     * @param msg:           The Message that is to be send.
+     * @param receiverEmail: The email of the receiver.
+     * @param senderEmail:   The Sender Email.
+     * @param url:           The URL of the Media.
+     * @return jsonObject.
+     */
+    public static JSONObject createParamsForNewMessage(String msg, String receiverEmail, String senderEmail, String url) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put(Constants.MESSAGE, msg);
+            jsonObject.put(Constants.RECEIVER_EMAIL, receiverEmail);
+            jsonObject.put(Constants.SENDER_EMAIl, senderEmail);
+            jsonObject.put(Constants.MESSAGE_URL, url);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Messages.l(TAG_CLASS, e.toString());
+        }
+        return jsonObject;
+    }
 }
