@@ -33,7 +33,7 @@ public class ParamsCreator {
      * @param phone:     the phone.
      * @return jsonObject.
      */
-    public static JSONObject createParamsForUSerAdd(String firstName, String lastName, String email, String phone) {
+    public static JSONObject createParamsForUserAdd(String firstName, String lastName, String email, String phone) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put(Constants.FIRST_NAME, firstName);
@@ -81,6 +81,24 @@ public class ParamsCreator {
             jsonObject.put(Constants.MESSAGE_URL, url);
         } catch (JSONException e) {
             e.printStackTrace();
+            Messages.l(TAG_CLASS, e.toString());
+        }
+        return jsonObject;
+    }
+
+    /**
+     * Method to create params for getting conversation between 2 user.
+     *
+     * @param senderEmail:   The Sender Email.
+     * @param receiverEmail: The receiver Email.
+     * @return jsonObject.
+     */
+    public static JSONObject createParamsForConversation(String senderEmail, String receiverEmail) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put(Constants.SENDER_EMAIl, senderEmail);
+            jsonObject.put(Constants.RECEIVER_EMAIL, receiverEmail);
+        } catch (JSONException e) {
             Messages.l(TAG_CLASS, e.toString());
         }
         return jsonObject;

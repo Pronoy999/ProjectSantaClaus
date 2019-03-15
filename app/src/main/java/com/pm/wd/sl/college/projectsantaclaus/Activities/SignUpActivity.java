@@ -138,7 +138,7 @@ public class SignUpActivity extends AppCompatActivity implements HTTPConnector.R
         if (!isEmpty(firstName) && !isEmpty(lastName) && !isEmpty(email) && !isEmpty(phone)) {
             String url = Constants.API_URL + "users";
             HTTPConnector connector = new HTTPConnector(this, url, this);
-            connector.makeQuery(ParamsCreator.createParamsForUSerAdd(firstName, lastName, email, phone));
+            connector.makeQuery(ParamsCreator.createParamsForUserAdd(firstName, lastName, email, phone));
             _progressDialog.show();
         } else {
             Messages.toast(getApplicationContext(), "Please fill in all the details. ");

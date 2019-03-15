@@ -19,6 +19,7 @@ import com.pm.wd.sl.college.projectsantaclaus.Helper.FileUtils;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.HTTPConnector;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.Messages;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.ParamsCreator;
+import com.pm.wd.sl.college.projectsantaclaus.Objects.Message;
 import com.pm.wd.sl.college.projectsantaclaus.Objects.MsgApp;
 import com.pm.wd.sl.college.projectsantaclaus.R;
 
@@ -56,7 +57,7 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
         _newMsgImageView = findViewById(R.id.newMsgImageView);
         _newMsgSendButton = findViewById(R.id.newMsgSendButton);
         _progressDialog = new ProgressDialog(this);
-        _progressDialog.setMessage("Uploading Message...");
+        _progressDialog.setMessage("Loading...");
         _progressDialog.setCancelable(false);
 
         String toRecv;
@@ -75,7 +76,7 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
             @Override
             public void onClick(View v) {
                 if (_newMsgEditText.getText().toString().isEmpty() /*|| todo no image chosen*/) {
-                    // todo show error;
+                    Messages.toast(getApplicationContext(), "Enter a message to continue.");
                     return;
                 }
                 // todo encode image
@@ -92,7 +93,7 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
             if (data != null) {
                 final Uri uri = data.getData();
                 if (uri != null) {
-                    // todo show shitty loading graphics
+                    _progressDialog.show();
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -119,11 +120,23 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
                                         fos.flush();
                                         imageFileName = String.format(Locale.getDefault(), "%d", crc.getValue());
                                         outputFile.renameTo(new File(outputFile.getParentFile(), imageFileName));
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                _progressDialog.dismiss();
+                                            }
+                                        });
                                     }
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
-                                // todo log show error
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        _progressDialog.dismiss();
+                                    }
+                                });
+                                Messages.toast(getApplicationContext(), "Something went wrong!");
                             }
                         }
                     }).start();
