@@ -1,9 +1,39 @@
 package com.pm.wd.sl.college.projectsantaclaus.Helper;
 
+import android.graphics.Bitmap;
+
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+
 public class LSBWatermarkUtils {
     static final int LENGTH_BITCOUNT = 8;
 
-    private static byte[] embed(byte[] data, int len, byte[] mark) {
+    public static Bitmap watermark(Bitmap bitmap, String text) {
+        ByteBuffer buf = ByteBuffer.allocate(bitmap.getByteCount());
+        bitmap.copyPixelsToBuffer(buf);
+
+        byte[] mark = text.getBytes(StandardCharsets.UTF_8);
+
+        embed(buf.array(), mark.length, mark);
+
+        buf.rewind();
+        Bitmap b = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
+        b.copyPixelsFromBuffer(buf);
+
+        return b;
+    }
+
+    public static String getMark(Bitmap bitmap) {
+        ByteBuffer buf = ByteBuffer.allocate(bitmap.getByteCount());
+        bitmap.copyPixelsToBuffer(buf);
+
+        byte[] arxr = buf.array();
+        byte[] val = ascend(arxr);
+
+        return new String(val, StandardCharsets.UTF_8);
+    }
+
+    private static void embed(byte[] data, int len, byte[] mark) {
         int count = 0;
         for (int bit_i = LENGTH_BITCOUNT - 1; bit_i >= 0; bit_i--) {
             int bit = (len >>> bit_i) & 1;
@@ -36,9 +66,9 @@ public class LSBWatermarkUtils {
         System.out.println("% change: " + df.format(percent_));
         System.out.println("% accuracy: " + df.format(1 - percent_));
         System.out.println();
-        */
 
         return data;
+        */
     }
 
     private static byte[] ascend(byte[] data) {

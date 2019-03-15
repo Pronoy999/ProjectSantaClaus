@@ -2,6 +2,8 @@ package com.pm.wd.sl.college.projectsantaclaus.Objects;
 
 import android.app.Application;
 
+import com.pm.wd.sl.college.projectsantaclaus.Adapters.MessageAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 

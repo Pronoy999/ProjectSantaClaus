@@ -1,4 +1,4 @@
-package com.pm.wd.sl.college.projectsantaclaus.Objects;
+package com.pm.wd.sl.college.projectsantaclaus.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.pm.wd.sl.college.projectsantaclaus.Objects.Message;
 import com.pm.wd.sl.college.projectsantaclaus.R;
 
 import java.util.List;

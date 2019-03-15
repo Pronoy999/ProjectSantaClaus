@@ -216,7 +216,8 @@ public class LoginActivity extends AppCompatActivity implements HTTPConnector.Re
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(Constants.IS_LOGGED_IN, true);
         editor.apply();
-        //TODO: Change the Activity after Successful OTP.
+        startActivity(new Intent(LoginActivity.this, MessagesActivity.class));
+        finish();
     }
 
     @Override
