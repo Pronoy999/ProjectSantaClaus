@@ -38,8 +38,6 @@ public class SignUpActivity extends AppCompatActivity implements HTTPConnector.R
             @Override
             public void onClick(View view) {
                 getData();
-
-//                startActivityForResult(FileUtils.newOpenImageIntent(false), 0xef54);
             }
         });
         _cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -50,67 +48,6 @@ public class SignUpActivity extends AppCompatActivity implements HTTPConnector.R
         });
     }
 
-    /*
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                final Uri uri = data.getData();
-                if (uri != null) {
-                    // todo show shitty loading graphics
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            String filename = String.format(Locale.getDefault(), "temp_%d", System.currentTimeMillis());
-                            try (ParcelFileDescriptor pfd = getContentResolver().openFileDescriptor(uri, "r")) {
-                                if (pfd != null) {
-                                    File outputFile = new File(getFilesDir(), filename);
-                                    try (FileOutputStream fos = new FileOutputStream(outputFile)) {
-                                        FileInputStream fis = new FileInputStream(pfd.getFileDescriptor());
-
-                                        CRC32 crc = new CRC32();
-
-                                        int totalLen = fis.available();
-
-                                        int bytesRead, len;
-
-                                        byte[] buffer = new byte[8192]; // const
-
-                                        for (len = 0; (bytesRead = fis.read(buffer, 0, 8192)) != -1; len += bytesRead) { // const
-                                            fos.write(buffer, 0, bytesRead);
-                                            crc.update(buffer, 0, bytesRead);
-                                        }
-
-                                        fos.flush();
-                                        String imageFileName = String.format(Locale.getDefault(), "%d", crc.getValue());
-                                        File imageFile = new File(outputFile.getParentFile(), imageFileName);
-                                        outputFile.renameTo(imageFile);
-
-                                        Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
-
-                                        bitmap = LSBWatermarkUtils.watermark(bitmap, "SOMESTRING");
-
-                                        try (FileOutputStream fos2 = new FileOutputStream(imageFile)) {
-                                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos2);
-                                        }
-
-                                        Bitmap b = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
-
-                                        System.out.println("ASCENDED TEXT: " + LSBWatermarkUtils.getMark(b));
-                                    }
-
-                                }
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                // todo log show error
-                            }
-                        }
-                    }).start();
-                }
-            }
-        }
-    }
-    */
 
     /**
      * Method to initialize Views.
