@@ -2,6 +2,7 @@ package com.pm.wd.sl.college.projectsantaclaus.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
 import android.support.v7.app.AppCompatActivity;
@@ -48,6 +49,7 @@ public class SignUpActivity extends AppCompatActivity implements HTTPConnector.R
             }
         });
     }
+
 
     /*
     @Override
@@ -96,6 +98,17 @@ public class SignUpActivity extends AppCompatActivity implements HTTPConnector.R
                                         Bitmap b = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
 
                                         System.out.println("ASCENDED TEXT: " + LSBWatermarkUtils.getMark(b));
+
+                                        byte[] bytes = new byte[(int) imageFile.length()];
+                                        try (BufferedInputStream buf = new BufferedInputStream(new FileInputStream(imageFile))) {
+                                            buf.read(bytes, 0, bytes.length);
+                                        } catch (FileNotFoundException e) {
+                                            // TODO Auto-generated catch block
+                                            e.printStackTrace();
+                                        } catch (IOException e) {
+                                            // TODO Auto-generated catch block
+                                            e.printStackTrace();
+                                        }
                                     }
 
                                 }
@@ -109,7 +122,7 @@ public class SignUpActivity extends AppCompatActivity implements HTTPConnector.R
             }
         }
     }
-    */
+*/
 
     /**
      * Method to initialize Views.
@@ -137,7 +150,7 @@ public class SignUpActivity extends AppCompatActivity implements HTTPConnector.R
         if (!isEmpty(firstName) && !isEmpty(lastName) && !isEmpty(email) && !isEmpty(phone)) {
             String url = Constants.API_URL + "users";
             HTTPConnector connector = new HTTPConnector(this, url, this);
-            connector.makeQuery(ParamsCreator.createParamsForUSerAdd(firstName, lastName, email, phone));
+            connector.makeQuery(ParamsCreator.createParamsForUserAdd(firstName, lastName, email, phone));
             _progressDialog.show();
         } else {
             Messages.toast(getApplicationContext(), "Please fill in all the details. ");
@@ -160,6 +173,14 @@ public class SignUpActivity extends AppCompatActivity implements HTTPConnector.R
         try {
             if (response.getBoolean(Constants.JSON_RESPONSE)) {
                 Messages.toast(getApplicationContext(), "User added Successfully.");
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateSharedPreferences();
+                    }
+                });
+                thread.start();
+                //TODO: Change to User Home Activity.
                 startActivity(new Intent(SignUpActivity.this,
                         LoginActivity.class));
             }
@@ -173,5 +194,15 @@ public class SignUpActivity extends AppCompatActivity implements HTTPConnector.R
         _progressDialog.dismiss();
         Messages.toast(getApplicationContext(), "Something went wrong.");
         Messages.l(TAG_CLASS, error.toString());
+    }
+
+    /**
+     * Method to updated the shared Preferences.
+     */
+    private void updateSharedPreferences() {
+        SharedPreferences sharedPreference = getSharedPreferences(Constants.SHARED_PREFERENCE_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreference.edit();
+        editor.putBoolean(Constants.IS_LOGGED_IN, true);
+        editor.apply();
     }
 }

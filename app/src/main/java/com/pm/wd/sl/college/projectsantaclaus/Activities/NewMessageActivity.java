@@ -1,7 +1,10 @@
 package com.pm.wd.sl.college.projectsantaclaus.Activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
@@ -11,8 +14,19 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.android.volley.VolleyError;
+import com.pm.wd.sl.college.projectsantaclaus.Helper.Constants;
+import com.pm.wd.sl.college.projectsantaclaus.Helper.FileTransferHelper;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.FileUtils;
+import com.pm.wd.sl.college.projectsantaclaus.Helper.HTTPConnector;
+import com.pm.wd.sl.college.projectsantaclaus.Helper.LSBWatermarkUtils;
+import com.pm.wd.sl.college.projectsantaclaus.Helper.Messages;
+import com.pm.wd.sl.college.projectsantaclaus.Helper.ParamsCreator;
+import com.pm.wd.sl.college.projectsantaclaus.Objects.MsgApp;
 import com.pm.wd.sl.college.projectsantaclaus.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,13 +35,15 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.zip.CRC32;
 
-public class NewMessageActivity extends AppCompatActivity {
-    EditText _toReceiverEdit;
-    EditText _newMsgEditText;
-    ImageView _newMsgImageView;
-    ImageView _newMsgSendButton;
+public class NewMessageActivity extends AppCompatActivity implements FileTransferHelper.TransferListener, HTTPConnector.ResponseListener {
+    private EditText _toReceiverEdit;
+    private EditText _newMsgEditText;
+    private ImageView _newMsgImageView;
+    private ImageView _newMsgSendButton;
 
-    String imageFileName = "";
+    private String imageFileName = "";
+    private ProgressDialog _progressDialog;
+    private String TAG_CLASS = NewMessageActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +58,9 @@ public class NewMessageActivity extends AppCompatActivity {
         _newMsgEditText = findViewById(R.id.newMsgEditText);
         _newMsgImageView = findViewById(R.id.newMsgImageView);
         _newMsgSendButton = findViewById(R.id.newMsgSendButton);
+        _progressDialog = new ProgressDialog(this);
+        _progressDialog.setMessage("Loading...");
+        _progressDialog.setCancelable(false);
 
         String toRecv;
         if (getIntent() != null && (toRecv = getIntent().getStringExtra("to_receiver_id")) != null) {
@@ -59,11 +78,11 @@ public class NewMessageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (_newMsgEditText.getText().toString().isEmpty() /*|| todo no image chosen*/) {
-                    // todo show error;
+                    Messages.toast(getApplicationContext(), "Enter a message to continue.");
                     return;
                 }
-
-                // todo encode image and then send image and message
+                // todo encode image
+                uploadFileAndSendMessage(imageFileName);
                 setResult(RESULT_OK);
                 finish();
             }
@@ -76,7 +95,7 @@ public class NewMessageActivity extends AppCompatActivity {
             if (data != null) {
                 final Uri uri = data.getData();
                 if (uri != null) {
-                    // todo show shitty loading graphics
+                    _progressDialog.show();
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -101,13 +120,29 @@ public class NewMessageActivity extends AppCompatActivity {
                                         }
 
                                         fos.flush();
+
                                         imageFileName = String.format(Locale.getDefault(), "%d", crc.getValue());
-                                        outputFile.renameTo(new File(outputFile.getParentFile(), imageFileName));
+                                        File imageFile = new File(outputFile.getParentFile(), imageFileName);
+                                        outputFile.renameTo(imageFile);
+
+                                        imageFileName = imageFile.getAbsolutePath();
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                _progressDialog.dismiss();
+                                            }
+                                        });
                                     }
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
-                                // todo log show error
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        _progressDialog.dismiss();
+                                    }
+                                });
+                                Messages.toast(getApplicationContext(), "Something went wrong!");
                             }
                         }
                     }).start();
@@ -120,5 +155,80 @@ public class NewMessageActivity extends AppCompatActivity {
     public void onBackPressed() {
         setResult(RESULT_CANCELED);
         finish();
+    }
+
+    /**
+     * Method to upload the Image to S3 and send the message.
+     *
+     * @param filePath: The File Location of the image.
+     */
+    private void uploadFileAndSendMessage(final String filePath) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+
+                bitmap = LSBWatermarkUtils.watermark(bitmap, MsgApp.instance().user.getEmail());
+
+                try (FileOutputStream fos2 = new FileOutputStream(filePath)) {
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 85, fos2);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                FileTransferHelper fileTransferHelper = new FileTransferHelper(NewMessageActivity.this,
+                        filePath, NewMessageActivity.this);
+                fileTransferHelper.upload(filePath);
+                //TODO: Update the URL.
+                String url = Constants.API_URL + "message/new";
+                HTTPConnector connector = new HTTPConnector(NewMessageActivity.this, url,
+                        NewMessageActivity.this);
+                String receiverEmail = _toReceiverEdit.getText().toString();
+                String sender = MsgApp.instance().user.getEmail();
+                String msg = _newMsgEditText.getText().toString();
+                //TODO: Set URL.
+                String msgUrl = "";
+                connector.makeQuery(ParamsCreator.createParamsForNewMessage(msg, receiverEmail,
+                        sender, msgUrl));
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        _progressDialog.show();
+                    }
+                });
+            }
+        }).start();
+
+    }
+
+    @Override
+    public void onTransferComplete() {
+        _progressDialog.dismiss();
+        Messages.toast(this, "Media uploaded.");
+    }
+
+    @Override
+    public void onTransferError(Exception e) {
+        _progressDialog.dismiss();
+        Messages.toast(this, "Couldn't upload Media.");
+    }
+
+    @Override
+    public void onResponse(JSONObject response) {
+        try {
+            if (response.getBoolean(Constants.JSON_RESPONSE)) {
+                Messages.toast(this, "Sent.");
+            } else {
+                Messages.toast(this, "Could not send.");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Messages.l(TAG_CLASS, e.toString());
+        }
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        Messages.toast(this, "Ops, Something went wrong.");
     }
 }
