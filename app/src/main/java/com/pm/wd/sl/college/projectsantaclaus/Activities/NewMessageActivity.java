@@ -99,8 +99,10 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            String filename = String.format(Locale.getDefault(), "temp_%d", System.currentTimeMillis());
-                            try (ParcelFileDescriptor pfd = getContentResolver().openFileDescriptor(uri, "r")) {
+                            String filename = String.format(Locale.getDefault(),
+                                    "temp_%d", System.currentTimeMillis());
+                            try (ParcelFileDescriptor pfd = getContentResolver()
+                                    .openFileDescriptor(uri, "r")) {
                                 if (pfd != null) {
                                     File outputFile = new File(getFilesDir(), filename);
                                     try (FileOutputStream fos = new FileOutputStream(outputFile)) {
@@ -114,15 +116,18 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
 
                                         byte[] buffer = new byte[8192]; // const
 
-                                        for (len = 0; (bytesRead = fis.read(buffer, 0, 8192)) != -1; len += bytesRead) { // const
+                                        for (len = 0; (bytesRead = fis.read(buffer, 0, 8192))
+                                                != -1; len += bytesRead) { // const
                                             fos.write(buffer, 0, bytesRead);
                                             crc.update(buffer, 0, bytesRead);
                                         }
 
                                         fos.flush();
 
-                                        imageFileName = String.format(Locale.getDefault(), "%d", crc.getValue());
-                                        File imageFile = new File(outputFile.getParentFile(), imageFileName);
+                                        imageFileName = String.format(Locale.getDefault(),
+                                                "%d", crc.getValue());
+                                        File imageFile = new File(outputFile.getParentFile(),
+                                                imageFileName);
                                         outputFile.renameTo(imageFile);
 
                                         imageFileName = imageFile.getAbsolutePath();
@@ -186,8 +191,7 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
                 String receiverEmail = _toReceiverEdit.getText().toString();
                 String sender = MsgApp.instance().user.getEmail();
                 String msg = _newMsgEditText.getText().toString();
-                //TODO: Set URL.
-                String msgUrl = "";
+                String msgUrl = new File(filePath).getName();
                 connector.makeQuery(ParamsCreator.createParamsForNewMessage(msg, receiverEmail,
                         sender, msgUrl));
                 runOnUiThread(new Runnable() {

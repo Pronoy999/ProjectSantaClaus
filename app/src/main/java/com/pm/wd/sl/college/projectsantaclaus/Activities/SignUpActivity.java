@@ -55,7 +55,7 @@ public class SignUpActivity extends AppCompatActivity implements HTTPConnector.R
             if (data != null) {
                 final Uri uri = data.getData();
                 if (uri != null) {
-                    // todo show shitty loading graphics
+
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -186,7 +186,8 @@ public class SignUpActivity extends AppCompatActivity implements HTTPConnector.R
      * Method to updated the shared Preferences.
      */
     private void updateSharedPreferences() {
-        SharedPreferences sharedPreference = getSharedPreferences(Constants.SHARED_PREFERENCE_NAME, MODE_PRIVATE);
+        SharedPreferences sharedPreference = getSharedPreferences(Constants.SHARED_PREFERENCE_NAME,
+                MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreference.edit();
         editor.putBoolean(Constants.IS_LOGGED_IN, true);
         editor.apply();

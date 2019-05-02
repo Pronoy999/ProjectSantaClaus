@@ -109,7 +109,8 @@ public class MessagesActivity extends AppCompatActivity implements HTTPConnector
             JSONArray array = response.getJSONArray(Constants.JSON_RESPONSE);
             for (int i = 0; i < array.length(); i++) {
                 JSONObject oneMessage = array.getJSONObject(i);
-                Message message = new Message(oneMessage.getInt(Constants.JSON_ID), oneMessage.getString(Constants.SENDER_EMAIl),
+                Message message = new Message(oneMessage.getInt(Constants.JSON_ID),
+                        oneMessage.getString(Constants.SENDER_EMAIl),
                         oneMessage.getString(Constants.RECEIVER_EMAIL),
                         oneMessage.getString(Constants.MESSAGE),
                         oneMessage.getString(Constants.MESSAGE_URL),
