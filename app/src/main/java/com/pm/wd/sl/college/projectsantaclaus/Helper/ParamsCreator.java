@@ -1,7 +1,5 @@
 package com.pm.wd.sl.college.projectsantaclaus.Helper;
 
-import com.pm.wd.sl.college.projectsantaclaus.Objects.Message;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 

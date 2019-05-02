@@ -12,12 +12,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.android.volley.VolleyError;
+import com.pm.wd.sl.college.projectsantaclaus.Adapters.MessageAdapter;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.Constants;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.HTTPConnector;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.Messages;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.ParamsCreator;
 import com.pm.wd.sl.college.projectsantaclaus.Objects.Message;
-import com.pm.wd.sl.college.projectsantaclaus.Adapters.MessageAdapter;
 import com.pm.wd.sl.college.projectsantaclaus.Objects.MsgApp;
 import com.pm.wd.sl.college.projectsantaclaus.R;
 

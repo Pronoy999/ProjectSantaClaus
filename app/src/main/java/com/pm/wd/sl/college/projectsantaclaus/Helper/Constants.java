@@ -11,8 +11,8 @@ public class Constants {
 
     public static final int OTP_REQUEST_CODE = 1;
     public static final int OTP_VERFIY_CODE = 2;
-    public static final int NEW_MESSAGE_ACTIVITY_CODE=3;
-    public static final int NEW_CONVO_MSG_CODE=4;
+    public static final int NEW_MESSAGE_ACTIVITY_CODE = 3;
+    public static final int NEW_CONVO_MSG_CODE = 4;
     /**
      * JSON Constants.
      */

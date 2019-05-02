@@ -3,6 +3,8 @@ package com.pm.wd.sl.college.projectsantaclaus.Activities;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
@@ -17,9 +19,9 @@ import com.pm.wd.sl.college.projectsantaclaus.Helper.Constants;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.FileTransferHelper;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.FileUtils;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.HTTPConnector;
+import com.pm.wd.sl.college.projectsantaclaus.Helper.LSBWatermarkUtils;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.Messages;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.ParamsCreator;
-import com.pm.wd.sl.college.projectsantaclaus.Objects.Message;
 import com.pm.wd.sl.college.projectsantaclaus.Objects.MsgApp;
 import com.pm.wd.sl.college.projectsantaclaus.R;
 
@@ -118,8 +120,12 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
                                         }
 
                                         fos.flush();
+
                                         imageFileName = String.format(Locale.getDefault(), "%d", crc.getValue());
-                                        outputFile.renameTo(new File(outputFile.getParentFile(), imageFileName));
+                                        File imageFile = new File(outputFile.getParentFile(), imageFileName);
+                                        outputFile.renameTo(imageFile);
+
+                                        imageFileName = imageFile.getAbsolutePath();
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
@@ -160,9 +166,18 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+
+                bitmap = LSBWatermarkUtils.watermark(bitmap, MsgApp.instance().user.getEmail());
+
+                try (FileOutputStream fos2 = new FileOutputStream(filePath)) {
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 85, fos2);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 FileTransferHelper fileTransferHelper = new FileTransferHelper(NewMessageActivity.this,
                         filePath, NewMessageActivity.this);
-                //TODO: Will imageFileName contain the entire File path or just the name?
                 fileTransferHelper.upload(filePath);
                 //TODO: Update the URL.
                 String url = Constants.API_URL + "message/new";
