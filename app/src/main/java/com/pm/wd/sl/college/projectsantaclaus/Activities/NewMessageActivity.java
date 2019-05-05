@@ -62,32 +62,49 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
         _progressDialog.setMessage("Loading...");
         _progressDialog.setCancelable(false);
 
-        String toRecv;
-        if (getIntent() != null && (toRecv = getIntent().getStringExtra("to_receiver_id")) != null) {
-            _toReceiverEdit.setText(toRecv); // const
+        boolean isReceived = false;
+
+        if (getIntent() != null) {
+            String otherPersonId;
+            if ((otherPersonId = getIntent().getStringExtra("other_person_id")) != null) {
+                _toReceiverEdit.setText(otherPersonId); // const
+            }
+
+            isReceived = getIntent().getBooleanExtra("is_received_msg", false);
         }
 
-        _newMsgImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(FileUtils.newOpenImageIntent(false), 0xef54);
-            }
-        });
-
-        _newMsgSendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (_newMsgEditText.getText().toString().isEmpty() /*|| todo no image chosen*/) {
-                    Messages.toast(getApplicationContext(), "Enter a message to continue.");
-                    return;
+        if (!isReceived) {
+            _newMsgImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivityForResult(FileUtils.newOpenImageIntent(false), 0xef54);
                 }
-                // todo encode image
-                uploadFileAndSendMessage(imageFileName);
-                setResult(RESULT_OK);
-                finish();
-            }
-        });
+            });
+
+            _newMsgSendButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (_newMsgEditText.getText().toString().isEmpty() /*|| todo no image chosen*/) {
+                        Messages.toast(getApplicationContext(), "Enter a message to continue.");
+                        return;
+                    }
+                    // todo encode image
+                    uploadFileAndSendMessage(imageFileName);
+                    setResult(RESULT_OK);
+                    finish();
+                }
+            });
+        } else {
+            _newMsgSendButton.setVisibility(View.GONE);
+            _toReceiverEdit.setHint("From:");
+            _toReceiverEdit.setFocusable(false);
+            _newMsgEditText.setFocusable(false);
+
+
+            // todo download and set image to new message using glide.
+        }
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
