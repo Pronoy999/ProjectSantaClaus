@@ -11,6 +11,7 @@
         android:id="@+id/toReceiverIL"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:hint="To:"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -19,7 +20,6 @@
             android:id="@+id/toReceiverEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="To:"
             android:inputType="textEmailAddress"
             android:textColor="@color/colorAccent"
             android:textSize="20sp"
@@ -49,8 +49,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textSize="20sp"
             android:hint="Type your message..."
+            android:textSize="20sp"
             tools:text="HI HELLO STATRUS" />
 
         <com.pm.wd.sl.college.projectsantaclaus.Objects.SquareImageView

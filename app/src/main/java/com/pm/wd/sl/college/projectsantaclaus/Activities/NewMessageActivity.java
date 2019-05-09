@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.pm.wd.sl.college.projectsantaclaus.Helper.HTTPConnector;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.LSBWatermarkUtils;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.Messages;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.ParamsCreator;
+import com.pm.wd.sl.college.projectsantaclaus.Objects.Message;
 import com.pm.wd.sl.college.projectsantaclaus.Objects.MsgApp;
 import com.pm.wd.sl.college.projectsantaclaus.R;
 
@@ -42,8 +44,11 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
     private EditText _newMsgEditText;
     private ImageView _newMsgImageView;
     private ImageView _newMsgSendButton;
+    private TextInputLayout _toReceiverIL;
 
     private String imageFileName = "";
+    private int originalSize = -1;
+    private int compressedSize = -1;
     private ProgressDialog _progressDialog;
     private String TAG_CLASS = NewMessageActivity.class.getSimpleName();
 
@@ -62,16 +67,19 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
         _newMsgEditText = findViewById(R.id.newMsgEditText);
         _newMsgImageView = findViewById(R.id.newMsgImageView);
         _newMsgSendButton = findViewById(R.id.newMsgSendButton);
+        _toReceiverIL = findViewById(R.id.toReceiverIL);
+
         _progressDialog = new ProgressDialog(this);
         _progressDialog.setMessage("Loading...");
         _progressDialog.setCancelable(false);
 
         cpd = new CircularProgressDrawable(this);
-        cpd.setStrokeWidth(2);
-        cpd.setCenterRadius(5.0f);
+        cpd.setStrokeWidth(5);
+        cpd.setCenterRadius(50.0f);
         cpd.start();
 
-        boolean isReceived = false;
+        boolean isView = false;
+        Message msg = null;
 
         if (getIntent() != null) {
             String otherPersonId;
@@ -79,10 +87,11 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
                 _toReceiverEdit.setText(otherPersonId); // const
             }
 
-            isReceived = getIntent().getBooleanExtra("is_received_msg", false);
+            isView = getIntent().getBooleanExtra("is_view_msg", false);
+            msg = getIntent().getParcelableExtra("param_message");
         }
 
-        if (!isReceived) {
+        if (!isView) {
             _newMsgImageView.setOnClickListener(v -> startActivityForResult(FileUtils.newOpenImageIntent(false), 0xef54));
 
             _newMsgSendButton.setOnClickListener(v -> {
@@ -91,18 +100,22 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
                     return;
                 }
                 // todo encode image
-                uploadFileAndSendMessage(imageFileName);
+                uploadFileAndSendMessage();
                 setResult(RESULT_OK);
                 finish();
             });
         } else {
             _newMsgSendButton.setVisibility(View.GONE);
-            _toReceiverEdit.setHint("From:");
+            if (msg != null && _toReceiverEdit.getText().toString().equals(msg.getRecvrUid())) {
+                _toReceiverIL.setHint("From:");
+            }
             _toReceiverEdit.setFocusable(false);
             _newMsgEditText.setFocusable(false);
 
-
-            // todo download and set image to new message using glide.
+            if (msg != null) {
+                Glide.with(this).load(msg.getUrl()).placeholder(cpd).into(_newMsgImageView);
+                _newMsgEditText.setText(msg.getMsg());
+            }
         }
     }
 
@@ -121,10 +134,10 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
                                 .openFileDescriptor(uri, "r")) {
                             if (pfd != null) {
                                 File outputFile = new File(getFilesDir(), filename);
+                                CRC32 crc = new CRC32();
                                 try (FileOutputStream fos = new FileOutputStream(outputFile)) {
                                     FileInputStream fis = new FileInputStream(pfd.getFileDescriptor());
 
-                                    CRC32 crc = new CRC32();
 
                                     int totalLen = fis.available();
 
@@ -139,19 +152,22 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
                                     }
 
                                     fos.flush();
+                                }
 
-                                    imageFileName = String.format(Locale.getDefault(),
-                                            "%d", crc.getValue());
-                                    final File imageFile = new File(outputFile.getParentFile(),
-                                            imageFileName);
-                                    outputFile.renameTo(imageFile);
+                                originalSize = (int) outputFile.length();
+
+                                imageFileName = String.format(Locale.getDefault(),
+                                        "%d", crc.getValue());
+                                final File imageFile = new File(outputFile.getParentFile(),
+                                        imageFileName);
+                                outputFile.renameTo(imageFile);
 
 //                                    imageFileName = imageFile.getName();
-                                    imageFileName = imageFile.getAbsolutePath();
-                                    runOnUiThread(() -> _progressDialog.dismiss());
-                                    _newMsgImageView.post(() -> Glide.with(NewMessageActivity.this).load(imageFile)
-                                            .placeholder(cpd).into(_newMsgImageView));
-                                }
+                                imageFileName = imageFile.getAbsolutePath();
+                                runOnUiThread(() -> _progressDialog.dismiss());
+                                _newMsgImageView.post(() -> Glide.with(NewMessageActivity.this).load(imageFile)
+                                        .placeholder(cpd).into(_newMsgImageView));
+
                             }
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -172,34 +188,38 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
 
     /**
      * Method to upload the Image to S3 and send the message.
-     *
-     * @param filePath: The File Location of the image.
      */
-    private void uploadFileAndSendMessage(final String filePath) {
+    private void uploadFileAndSendMessage() {
         new Thread(() -> {
-            Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+            String msgUrl = "";
 
-            bitmap = LSBWatermarkUtils.watermark(bitmap, MsgApp.instance().user.getEmail());
+            if (!imageFileName.isEmpty()) {
+                Bitmap bitmap = BitmapFactory.decodeFile(imageFileName);
 
-            try (FileOutputStream fos2 = new FileOutputStream(filePath)) {
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 85, fos2);
-            } catch (IOException e) {
-                e.printStackTrace();
+                bitmap = LSBWatermarkUtils.watermark(bitmap, MsgApp.instance().user.getEmail());
+//                bitmap = CompressionUtils.compress(bitmap);
+
+                try (FileOutputStream fos2 = new FileOutputStream(imageFileName)) {
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 85, fos2);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                File file = new File(getFilesDir(), imageFileName);
+
+                FileTransferHelper fileTransferHelper = new FileTransferHelper(NewMessageActivity.this,
+                        imageFileName, NewMessageActivity.this);
+                msgUrl = String.format(Constants.BUCKET_URL, file.getName());
+                fileTransferHelper.upload(file.getName());
             }
-            FileTransferHelper fileTransferHelper = new FileTransferHelper(NewMessageActivity.this,
-                    filePath, NewMessageActivity.this);
-            String[] fParts = filePath.split(File.separator);
-            String fPP = fParts[fParts.length - 1];
-            fileTransferHelper.upload(fPP);
             String url = Constants.API_URL + "message/new";
             HTTPConnector connector = new HTTPConnector(NewMessageActivity.this, url,
                     NewMessageActivity.this);
             String receiverEmail = _toReceiverEdit.getText().toString();
             String sender = MsgApp.instance().user.getEmail();
             String msg = _newMsgEditText.getText().toString();
-            String msgUrl = String.format(Constants.BUCKET_URL, fPP);
             connector.makeQuery(ParamsCreator.createParamsForNewMessage(msg, receiverEmail,
-                    sender, msgUrl));
+                    sender, msgUrl, originalSize, compressedSize));
         }).start();
 
     }

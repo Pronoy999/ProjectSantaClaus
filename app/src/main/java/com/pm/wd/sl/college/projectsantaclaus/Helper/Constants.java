@@ -32,6 +32,8 @@ public class Constants {
     public static final String RECEIVER_EMAIL = "receiver_email";
     public static final String MESSAGE = "message";
     public static final String MESSAGE_URL = "url";
+    public static final String MESSAGE_ORIG_SIZE = "original_size";
+    public static final String MESSAGE_COMP_SIZE = "compressed_size";
     public static final String MESSAGE_DATE = "msg_date";
     public static final String MESSAGE_TIME = "msg_time";
 
