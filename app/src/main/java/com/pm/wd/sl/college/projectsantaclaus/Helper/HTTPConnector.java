@@ -32,19 +32,13 @@ public class HTTPConnector {
      * Method to make the HTTP POST Request.
      */
     public void makeQuery(JSONObject postData) {
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, queryURL, postData, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                if (responseListener != null) {
-                    responseListener.onResponse(response);
-                }
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, queryURL, postData, response -> {
+            if (responseListener != null) {
+                responseListener.onResponse(response);
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (responseListener != null) {
-                    responseListener.onErrorResponse(error);
-                }
+        }, error -> {
+            if (responseListener != null) {
+                responseListener.onErrorResponse(error);
             }
         });
         request.setTag(TAG);
@@ -55,19 +49,13 @@ public class HTTPConnector {
      * Method to make a HTTP GET Request.
      */
     public void makeQuery() {
-        JsonObjectRequest request = new JsonObjectRequest(queryURL, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                if (responseListener != null) {
-                    responseListener.onResponse(response);
-                }
+        JsonObjectRequest request = new JsonObjectRequest(queryURL, null, response -> {
+            if (responseListener != null) {
+                responseListener.onResponse(response);
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (responseListener != null) {
-                    responseListener.onErrorResponse(error);
-                }
+        }, error -> {
+            if (responseListener != null) {
+                responseListener.onErrorResponse(error);
             }
         });
         request.setTag(TAG);
@@ -82,19 +70,13 @@ public class HTTPConnector {
      */
     public void makeQuery(JSONObject postData, boolean isPut) {
         if (isPut) {
-            JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, queryURL, postData, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    if (responseListener != null) {
-                        responseListener.onResponse(response);
-                    }
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.PUT, queryURL, postData, response -> {
+                if (responseListener != null) {
+                    responseListener.onResponse(response);
                 }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    if (responseListener != null) {
-                        responseListener.onErrorResponse(error);
-                    }
+            }, error -> {
+                if (responseListener != null) {
+                    responseListener.onErrorResponse(error);
                 }
             });
             SingleTon.getInstance(context).addToRequestQueue(request);

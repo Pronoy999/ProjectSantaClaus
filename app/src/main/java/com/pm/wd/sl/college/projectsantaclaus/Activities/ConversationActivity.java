@@ -57,13 +57,10 @@ public class ConversationActivity extends AppCompatActivity implements HTTPConne
      */
     private void initializeViews() {
         FloatingActionButton newMsgConv = findViewById(R.id.newMsgConv);
-        newMsgConv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivityForResult(new Intent(ConversationActivity.this,
-                                NewMessageActivity.class).putExtra("other_person_id", senderId),
-                        Constants.NEW_CONVO_MSG_CODE); // const
-            }
+        newMsgConv.setOnClickListener(view -> {
+            startActivityForResult(new Intent(ConversationActivity.this,
+                            NewMessageActivity.class).putExtra("other_person_id", senderId),
+                    Constants.NEW_CONVO_MSG_CODE); // const
         });
         _progressDialog = new ProgressDialog(this);
         _progressDialog.setMessage("Loading...");
@@ -77,21 +74,13 @@ public class ConversationActivity extends AppCompatActivity implements HTTPConne
      * Method to fetch the messages between 2 users.
      */
     private void fetchMessages() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String url = Constants.API_URL + "message/get";
-                HTTPConnector connector = new HTTPConnector(ConversationActivity.this, url,
-                        ConversationActivity.this);
-                connector.makeQuery(ParamsCreator
-                        .createParamsForConversation(MsgApp.instance().user.getEmail(), senderId));
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        _progressDialog.show();
-                    }
-                });
-            }
+        new Thread(() -> {
+            String url = Constants.API_URL + "message/get";
+            HTTPConnector connector = new HTTPConnector(ConversationActivity.this, url,
+                    ConversationActivity.this);
+            connector.makeQuery(ParamsCreator
+                    .createParamsForConversation(MsgApp.instance().user.getEmail(), senderId));
+            runOnUiThread(() -> _progressDialog.show());
         }).start();
     }
 

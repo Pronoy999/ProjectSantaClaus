@@ -23,6 +23,8 @@ import com.pm.wd.sl.college.projectsantaclaus.Helper.HTTPConnector;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.Messages;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.ParamsCreator;
 import com.pm.wd.sl.college.projectsantaclaus.Objects.DigitText;
+import com.pm.wd.sl.college.projectsantaclaus.Objects.MsgApp;
+import com.pm.wd.sl.college.projectsantaclaus.Objects.User;
 import com.pm.wd.sl.college.projectsantaclaus.R;
 
 import org.json.JSONException;
@@ -75,45 +77,27 @@ public class LoginActivity extends AppCompatActivity implements HTTPConnector.Re
                 }
             });
 
-            digit.setOnBackspaceListener(new DigitText.OnBackspaceListener() {
-                @Override
-                public void onBackspace(KeyEvent event) {
-                    if (digit.getSelectionStart() == 0 && digit.getSelectionEnd() < 1) {
-                        LoginActivity.this.onDigitDeleted(q - 1);
-                    } else {
-                        LoginActivity.this.onDigitDeleted(q);
-                    }
+            digit.setOnBackspaceListener(event -> {
+                if (digit.getSelectionStart() == 0 && digit.getSelectionEnd() < 1) {
+                    LoginActivity.this.onDigitDeleted(q - 1);
+                } else {
+                    LoginActivity.this.onDigitDeleted(q);
                 }
             });
         }
-        _requestOTP.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!(TextUtils.isEmpty(_mobileNumber.getText().toString())) &&
-                        _mobileNumber.getText().toString().length() == 10) {
-                    requestOTP(_mobileNumber.getText().toString());
-                }
+        _requestOTP.setOnClickListener(v -> {
+            if (!(TextUtils.isEmpty(_mobileNumber.getText().toString())) &&
+                    _mobileNumber.getText().toString().length() == 10) {
+                requestOTP(_mobileNumber.getText().toString());
+                hideKeyboard(LoginActivity.this);
             }
         });
-        _confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pinNumber = new String(mOTPChars);
-                checkPin();
-            }
+        _confirmButton.setOnClickListener(v -> {
+            pinNumber = new String(mOTPChars);
+            checkPin();
         });
-        _cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        _registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
-            }
-        });
+        _cancelButton.setOnClickListener(v -> finish());
+        _registerButton.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, SignUpActivity.class)));
     }
 
     /**
@@ -211,12 +195,22 @@ public class LoginActivity extends AppCompatActivity implements HTTPConnector.Re
     /**
      * Method to change the Activity.
      */
-    private void changeActivity() {
+    private void changeActivity(JSONObject userData) {
         SharedPreferences preferences = getSharedPreferences(Constants.SHARED_PREFERENCE_NAME,
                 MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(Constants.IS_LOGGED_IN, true);
         editor.apply();
+        try {
+            MsgApp.instance().user = new User(userData.getString(Constants.FIRST_NAME),
+                    userData.getString(Constants.LAST_NAME),
+                    userData.getString(Constants.EMAIL),
+                    userData.getString(Constants.PHONE),
+                    userData.getString(Constants.JSON_USER_REG_DATE),
+                    userData.getString(Constants.JSON_USER_REG_TIME));
+        } catch (JSONException e) {
+            Messages.l(TAG_CLASS, e.toString());
+        }
         startActivity(new Intent(LoginActivity.this, MessagesActivity.class));
         finish();
     }
@@ -236,7 +230,8 @@ public class LoginActivity extends AppCompatActivity implements HTTPConnector.Re
                 }
             } else if (currentCode == Constants.OTP_VERFIY_CODE) {
                 if (response.getBoolean(Constants.JSON_RESPONSE)) {
-                    changeActivity();
+                    JSONObject userData = response.getJSONObject(Constants.JSON_MSG);
+                    changeActivity(userData);
                 } else {
                     Messages.toast(getApplicationContext(), "Please enter a valid OTP.");
                 }

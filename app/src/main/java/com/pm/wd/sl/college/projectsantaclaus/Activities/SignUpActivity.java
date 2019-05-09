@@ -34,18 +34,8 @@ public class SignUpActivity extends AppCompatActivity implements HTTPConnector.R
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         initializeViews();
-        _registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getData();
-            }
-        });
-        _cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        _registerButton.setOnClickListener(view -> getData());
+        _cancelButton.setOnClickListener(v -> finish());
     }
 
     /**
@@ -97,12 +87,7 @@ public class SignUpActivity extends AppCompatActivity implements HTTPConnector.R
         try {
             if (response.getBoolean(Constants.JSON_RESPONSE)) {
                 Messages.toast(getApplicationContext(), "User added Successfully.");
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateSharedPreferences();
-                    }
-                });
+                Thread thread = new Thread(() -> updateSharedPreferences());
                 thread.start();
                 //TODO: Change to User Home Activity.
                 startActivity(new Intent(SignUpActivity.this,

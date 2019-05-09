@@ -19,12 +19,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences =
                 getSharedPreferences(Constants.SHARED_PREFERENCE_NAME, MODE_PRIVATE);
         isLoggedIn = sharedPreferences.getBoolean(Constants.IS_LOGGED_IN, false);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                changeActivity();
-            }
-        }, 1000);
+        new Handler().postDelayed(() -> changeActivity(), 1000);
 
     }
 

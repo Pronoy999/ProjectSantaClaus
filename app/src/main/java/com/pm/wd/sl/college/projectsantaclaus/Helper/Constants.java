@@ -19,11 +19,14 @@ public class Constants {
      */
     public static final String JSON_PHONE_NUMBER = "phoneNumber";
     public static final String JSON_RESPONSE = "res";
+    public static final String JSON_MSG = "msg";
     public static final String FIRST_NAME = "first_name";
     public static final String LAST_NAME = "last_name";
     public static final String PHONE = "phone";
     public static final String EMAIL = "email";
     public static final String JSON_ID = "id";
+    public static final String JSON_USER_REG_DATE = "reg_date";
+    public static final String JSON_USER_REG_TIME = "reg_time";
     public static final String SENDER_EMAIl = "sender_email";
     public static final String RECEIVER_EMAIL = "receiver_email";
     public static final String MESSAGE = "message";

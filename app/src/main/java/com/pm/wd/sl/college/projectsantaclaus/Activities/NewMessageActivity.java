@@ -9,12 +9,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
+import com.bumptech.glide.Glide;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.Constants;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.FileTransferHelper;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.FileUtils;
@@ -45,6 +47,8 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
     private ProgressDialog _progressDialog;
     private String TAG_CLASS = NewMessageActivity.class.getSimpleName();
 
+    private CircularProgressDrawable cpd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +66,11 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
         _progressDialog.setMessage("Loading...");
         _progressDialog.setCancelable(false);
 
+        cpd = new CircularProgressDrawable(this);
+        cpd.setStrokeWidth(2);
+        cpd.setCenterRadius(5.0f);
+        cpd.start();
+
         boolean isReceived = false;
 
         if (getIntent() != null) {
@@ -74,25 +83,17 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
         }
 
         if (!isReceived) {
-            _newMsgImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivityForResult(FileUtils.newOpenImageIntent(false), 0xef54);
-                }
-            });
+            _newMsgImageView.setOnClickListener(v -> startActivityForResult(FileUtils.newOpenImageIntent(false), 0xef54));
 
-            _newMsgSendButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (_newMsgEditText.getText().toString().isEmpty() /*|| todo no image chosen*/) {
-                        Messages.toast(getApplicationContext(), "Enter a message to continue.");
-                        return;
-                    }
-                    // todo encode image
-                    uploadFileAndSendMessage(imageFileName);
-                    setResult(RESULT_OK);
-                    finish();
+            _newMsgSendButton.setOnClickListener(v -> {
+                if (_newMsgEditText.getText().toString().isEmpty() /*|| todo no image chosen*/) {
+                    Messages.toast(getApplicationContext(), "Enter a message to continue.");
+                    return;
                 }
+                // todo encode image
+                uploadFileAndSendMessage(imageFileName);
+                setResult(RESULT_OK);
+                finish();
             });
         } else {
             _newMsgSendButton.setVisibility(View.GONE);
@@ -113,59 +114,49 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
                 final Uri uri = data.getData();
                 if (uri != null) {
                     _progressDialog.show();
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            String filename = String.format(Locale.getDefault(),
-                                    "temp_%d", System.currentTimeMillis());
-                            try (ParcelFileDescriptor pfd = getContentResolver()
-                                    .openFileDescriptor(uri, "r")) {
-                                if (pfd != null) {
-                                    File outputFile = new File(getFilesDir(), filename);
-                                    try (FileOutputStream fos = new FileOutputStream(outputFile)) {
-                                        FileInputStream fis = new FileInputStream(pfd.getFileDescriptor());
+                    new Thread(() -> {
+                        String filename = String.format(Locale.getDefault(),
+                                "temp_%d", System.currentTimeMillis());
+                        try (ParcelFileDescriptor pfd = getContentResolver()
+                                .openFileDescriptor(uri, "r")) {
+                            if (pfd != null) {
+                                File outputFile = new File(getFilesDir(), filename);
+                                try (FileOutputStream fos = new FileOutputStream(outputFile)) {
+                                    FileInputStream fis = new FileInputStream(pfd.getFileDescriptor());
 
-                                        CRC32 crc = new CRC32();
+                                    CRC32 crc = new CRC32();
 
-                                        int totalLen = fis.available();
+                                    int totalLen = fis.available();
 
-                                        int bytesRead, len;
+                                    int bytesRead, len;
 
-                                        byte[] buffer = new byte[8192]; // const
+                                    byte[] buffer = new byte[8192]; // const
 
-                                        for (len = 0; (bytesRead = fis.read(buffer, 0, 8192))
-                                                != -1; len += bytesRead) { // const
-                                            fos.write(buffer, 0, bytesRead);
-                                            crc.update(buffer, 0, bytesRead);
-                                        }
-
-                                        fos.flush();
-
-                                        imageFileName = String.format(Locale.getDefault(),
-                                                "%d", crc.getValue());
-                                        File imageFile = new File(outputFile.getParentFile(),
-                                                imageFileName);
-                                        outputFile.renameTo(imageFile);
-
-                                        imageFileName = imageFile.getAbsolutePath();
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                _progressDialog.dismiss();
-                                            }
-                                        });
+                                    for (len = 0; (bytesRead = fis.read(buffer, 0, 8192))
+                                            != -1; len += bytesRead) { // const
+                                        fos.write(buffer, 0, bytesRead);
+                                        crc.update(buffer, 0, bytesRead);
                                     }
+
+                                    fos.flush();
+
+                                    imageFileName = String.format(Locale.getDefault(),
+                                            "%d", crc.getValue());
+                                    final File imageFile = new File(outputFile.getParentFile(),
+                                            imageFileName);
+                                    outputFile.renameTo(imageFile);
+
+//                                    imageFileName = imageFile.getName();
+                                    imageFileName = imageFile.getAbsolutePath();
+                                    runOnUiThread(() -> _progressDialog.dismiss());
+                                    _newMsgImageView.post(() -> Glide.with(NewMessageActivity.this).load(imageFile)
+                                            .placeholder(cpd).into(_newMsgImageView));
                                 }
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        _progressDialog.dismiss();
-                                    }
-                                });
-                                Messages.toast(getApplicationContext(), "Something went wrong!");
                             }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            runOnUiThread(() -> _progressDialog.dismiss());
+                            Messages.toast(getApplicationContext(), "Something went wrong!");
                         }
                     }).start();
                 }
@@ -185,46 +176,41 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
      * @param filePath: The File Location of the image.
      */
     private void uploadFileAndSendMessage(final String filePath) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+        new Thread(() -> {
+            Bitmap bitmap = BitmapFactory.decodeFile(filePath);
 
-                bitmap = LSBWatermarkUtils.watermark(bitmap, MsgApp.instance().user.getEmail());
+            bitmap = LSBWatermarkUtils.watermark(bitmap, MsgApp.instance().user.getEmail());
 
-                try (FileOutputStream fos2 = new FileOutputStream(filePath)) {
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 85, fos2);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                FileTransferHelper fileTransferHelper = new FileTransferHelper(NewMessageActivity.this,
-                        filePath, NewMessageActivity.this);
-                fileTransferHelper.upload(filePath);
-                //TODO: Update the URL.
-                String url = Constants.API_URL + "message/new";
-                HTTPConnector connector = new HTTPConnector(NewMessageActivity.this, url,
-                        NewMessageActivity.this);
-                String receiverEmail = _toReceiverEdit.getText().toString();
-                String sender = MsgApp.instance().user.getEmail();
-                String msg = _newMsgEditText.getText().toString();
-                String msgUrl = new File(filePath).getName();
-                connector.makeQuery(ParamsCreator.createParamsForNewMessage(msg, receiverEmail,
-                        sender, msgUrl));
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        _progressDialog.show();
-                    }
-                });
+            try (FileOutputStream fos2 = new FileOutputStream(filePath)) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 85, fos2);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+
+            FileTransferHelper fileTransferHelper = new FileTransferHelper(NewMessageActivity.this,
+                    filePath, NewMessageActivity.this);
+            String[] fParts = filePath.split(File.separator);
+            fileTransferHelper.upload(fParts[fParts.length - 1]);
+            //TODO: Update the URL.
+            String url = Constants.API_URL + "message/new";
+            HTTPConnector connector = new HTTPConnector(NewMessageActivity.this, url,
+                    NewMessageActivity.this);
+            String receiverEmail = _toReceiverEdit.getText().toString();
+            String sender = MsgApp.instance().user.getEmail();
+            String msg = _newMsgEditText.getText().toString();
+            String msgUrl = new File(filePath).getName();
+            connector.makeQuery(ParamsCreator.createParamsForNewMessage(msg, receiverEmail,
+                    sender, msgUrl));
+            runOnUiThread(() -> _progressDialog.show());
         }).start();
 
     }
 
     @Override
     public void onTransferComplete() {
-        _progressDialog.dismiss();
+        runOnUiThread(() -> {
+            _progressDialog.dismiss();
+        });
         Messages.toast(this, "Media uploaded.");
     }
 
@@ -239,6 +225,7 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
         try {
             if (response.getBoolean(Constants.JSON_RESPONSE)) {
                 Messages.toast(this, "Sent.");
+                finish();
             } else {
                 Messages.toast(this, "Could not send.");
             }

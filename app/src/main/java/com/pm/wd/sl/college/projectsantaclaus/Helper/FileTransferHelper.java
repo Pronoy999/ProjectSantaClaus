@@ -39,15 +39,12 @@ public class FileTransferHelper implements TransferListener {
      *                  will be initialized in the constructor.
      */
     public void upload(final String fileName) {
-        Thread uploadThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                AWSHelper awsHelper = new AWSHelper();
-                TransferUtility transferUtility = awsHelper.getTransferUtility(context);
-                TransferObserver transferObserver = transferUtility
-                        .upload(Constants.AWS_BUCKET_NAME, fileName, new File(filePath));
-                transferObserver.setTransferListener(FileTransferHelper.this);
-            }
+        Thread uploadThread = new Thread(() -> {
+            AWSHelper awsHelper = new AWSHelper();
+            TransferUtility transferUtility = awsHelper.getTransferUtility(context);
+            TransferObserver transferObserver = transferUtility
+                    .upload(Constants.AWS_BUCKET_NAME, fileName, new File(filePath));
+            transferObserver.setTransferListener(FileTransferHelper.this);
         });
         uploadThread.start();
     }
@@ -58,14 +55,11 @@ public class FileTransferHelper implements TransferListener {
      * @param fileName: The Key by which the file is saved in the S3 Bucket.
      */
     public void download(final String fileName) {
-        Thread downloadThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                AWSHelper helper = new AWSHelper();
-                TransferUtility transferUtility = helper.getTransferUtility(context);
-                TransferObserver observer = transferUtility.download(fileName, new File(filePath));
-                observer.setTransferListener(FileTransferHelper.this);
-            }
+        Thread downloadThread = new Thread(() -> {
+            AWSHelper helper = new AWSHelper();
+            TransferUtility transferUtility = helper.getTransferUtility(context);
+            TransferObserver observer = transferUtility.download(fileName, new File(filePath));
+            observer.setTransferListener(FileTransferHelper.this);
         });
         downloadThread.start();
     }

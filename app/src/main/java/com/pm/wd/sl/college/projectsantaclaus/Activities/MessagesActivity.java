@@ -58,28 +58,20 @@ public class MessagesActivity extends AppCompatActivity implements HTTPConnector
         _progressDialog = new ProgressDialog(this);
         _progressDialog.setMessage("Loading...");
         _progressDialog.setCancelable(false);
-        _newMsgButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivityForResult(new Intent(MessagesActivity.this,
-                        NewMessageActivity.class), Constants.NEW_MESSAGE_ACTIVITY_CODE);
-            }
-        });
+        _newMsgButton.setOnClickListener(view -> startActivityForResult(new Intent(MessagesActivity.this,
+                NewMessageActivity.class), Constants.NEW_MESSAGE_ACTIVITY_CODE));
 
         _msgsView.setAdapter(userMsgsAdapter);
-        _msgsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Message msg = userMsgsAdapter.getItem(position);
-                if (msg != null) {
-                    String userId = msg.getSendrUid()
-                            .equalsIgnoreCase(MsgApp.instance().user.getEmail()) ?
-                            msg.getRecvrUid() : msg.getSendrUid();
+        _msgsView.setOnItemClickListener((parent, view, position, id) -> {
+            Message msg = userMsgsAdapter.getItem(position);
+            if (msg != null) {
+                String userId = msg.getSendrUid()
+                        .equalsIgnoreCase(MsgApp.instance().user.getEmail()) ?
+                        msg.getRecvrUid() : msg.getSendrUid();
 
-                    Intent intent = new Intent(MessagesActivity.this,
-                            ConversationActivity.class).putExtra("senderId", userId); // const
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(MessagesActivity.this,
+                        ConversationActivity.class).putExtra("senderId", userId); // const
+                startActivity(intent);
             }
         });
     }
@@ -90,7 +82,7 @@ public class MessagesActivity extends AppCompatActivity implements HTTPConnector
     private void fetchMessages() {
         String url = Constants.API_URL + "message/recent";
         HTTPConnector connector = new HTTPConnector(getApplicationContext(), url, this);
-        connector.makeQuery(ParamsCreator.createParamsForRecentMessages(MsgApp.instance().user.getEmail()));
+        connector.makeQuery(ParamsCreator.createParamsForRecentMessages(MsgApp.instance().user.getEmail()), true);
         _progressDialog.show();
     }
 
