@@ -61,7 +61,7 @@ public class ConversationActivity extends AppCompatActivity implements HTTPConne
             @Override
             public void onClick(View view) {
                 startActivityForResult(new Intent(ConversationActivity.this,
-                                NewMessageActivity.class).putExtra("receiver_id", senderId),
+                                NewMessageActivity.class).putExtra("other_person_id", senderId),
                         Constants.NEW_CONVO_MSG_CODE); // const
             }
         });
