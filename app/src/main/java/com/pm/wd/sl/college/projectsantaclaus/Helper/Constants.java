@@ -14,6 +14,7 @@ public class Constants {
     public static final int OTP_VERFIY_CODE = 2;
     public static final int NEW_MESSAGE_ACTIVITY_CODE = 3;
     public static final int NEW_CONVO_MSG_CODE = 4;
+    public static final String BUCKET_URL = "https://s3.ap-south-1.amazonaws.com/santa-claus/%s";
     /**
      * JSON Constants.
      */
@@ -31,8 +32,8 @@ public class Constants {
     public static final String RECEIVER_EMAIL = "receiver_email";
     public static final String MESSAGE = "message";
     public static final String MESSAGE_URL = "url";
-    public static final String MESSAGE_DATE = "message_date";
-    public static final String MESSAGE_TIME = "message_time";
+    public static final String MESSAGE_DATE = "msg_date";
+    public static final String MESSAGE_TIME = "msg_time";
 
     /**
      * AWS Constants.

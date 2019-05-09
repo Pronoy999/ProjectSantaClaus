@@ -10,7 +10,7 @@ public class Message {
     String time;
     User sender;
 
-    public Message(int id, String sendr_uid, String recvr_uid, String msg, String url, String date, String time) {
+    public Message(int id, String sendr_uid, String recvr_uid, String msg, String url, String date, String time, User sender) {
         this.id = id;
         this.sendr_uid = sendr_uid;
         this.recvr_uid = recvr_uid;
@@ -18,6 +18,7 @@ public class Message {
         this.url = url;
         this.date = date;
         this.time = time;
+        this.sender = sender;
     }
 
 

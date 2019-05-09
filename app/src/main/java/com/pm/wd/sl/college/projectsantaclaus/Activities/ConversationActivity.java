@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.ListView;
 
 import com.android.volley.VolleyError;
@@ -18,6 +17,7 @@ import com.pm.wd.sl.college.projectsantaclaus.Helper.Messages;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.ParamsCreator;
 import com.pm.wd.sl.college.projectsantaclaus.Objects.Message;
 import com.pm.wd.sl.college.projectsantaclaus.Objects.MsgApp;
+import com.pm.wd.sl.college.projectsantaclaus.Objects.User;
 import com.pm.wd.sl.college.projectsantaclaus.R;
 
 import org.json.JSONArray;
@@ -60,14 +60,14 @@ public class ConversationActivity extends AppCompatActivity implements HTTPConne
         newMsgConv.setOnClickListener(view -> {
             startActivityForResult(new Intent(ConversationActivity.this,
                             NewMessageActivity.class).putExtra("other_person_id", senderId),
-                    Constants.NEW_CONVO_MSG_CODE); // const
+                    Constants.NEW_CONVO_MSG_CODE);
         });
         _progressDialog = new ProgressDialog(this);
         _progressDialog.setMessage("Loading...");
         _progressDialog.setCancelable(false);
         _convMsgView = findViewById(R.id.converseMessageView);
-
         convAdapter = new ConversationAdapter(this, R.layout.list_item_converse_message_send, convMessages);
+        _convMsgView.setAdapter(convAdapter);
     }
 
     /**
@@ -99,13 +99,19 @@ public class ConversationActivity extends AppCompatActivity implements HTTPConne
             JSONArray array = response.getJSONArray(Constants.JSON_RESPONSE);
             for (int i = 0; i < array.length(); i++) {
                 JSONObject oneMessage = array.getJSONObject(i);
+                User user = new User(oneMessage.getString(Constants.FIRST_NAME),
+                        oneMessage.getString(Constants.LAST_NAME),
+                        oneMessage.getString(Constants.EMAIL),
+                        oneMessage.getString(Constants.PHONE),
+                        oneMessage.getString(Constants.JSON_USER_REG_DATE),
+                        oneMessage.getString(Constants.JSON_USER_REG_TIME));
                 Message message = new Message(oneMessage.getInt(Constants.JSON_ID),
                         oneMessage.getString(Constants.SENDER_EMAIl),
                         oneMessage.getString(Constants.RECEIVER_EMAIL),
                         oneMessage.getString(Constants.MESSAGE),
                         oneMessage.getString(Constants.MESSAGE_URL),
                         oneMessage.getString(Constants.MESSAGE_DATE),
-                        oneMessage.getString(Constants.MESSAGE_TIME));
+                        oneMessage.getString(Constants.MESSAGE_TIME), user);
                 convMessages.add(message);
             }
             convAdapter.notifyDataSetChanged();

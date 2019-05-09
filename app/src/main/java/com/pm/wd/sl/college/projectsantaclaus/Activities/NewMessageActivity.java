@@ -186,22 +186,20 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             FileTransferHelper fileTransferHelper = new FileTransferHelper(NewMessageActivity.this,
                     filePath, NewMessageActivity.this);
             String[] fParts = filePath.split(File.separator);
-            fileTransferHelper.upload(fParts[fParts.length - 1]);
-            //TODO: Update the URL.
+            String fPP = fParts[fParts.length - 1];
+            fileTransferHelper.upload(fPP);
             String url = Constants.API_URL + "message/new";
             HTTPConnector connector = new HTTPConnector(NewMessageActivity.this, url,
                     NewMessageActivity.this);
             String receiverEmail = _toReceiverEdit.getText().toString();
             String sender = MsgApp.instance().user.getEmail();
             String msg = _newMsgEditText.getText().toString();
-            String msgUrl = new File(filePath).getName();
+            String msgUrl = String.format(Constants.BUCKET_URL, fPP);
             connector.makeQuery(ParamsCreator.createParamsForNewMessage(msg, receiverEmail,
                     sender, msgUrl));
-            runOnUiThread(() -> _progressDialog.show());
         }).start();
 
     }
@@ -209,14 +207,19 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
     @Override
     public void onTransferComplete() {
         runOnUiThread(() -> {
-            _progressDialog.dismiss();
+            if (!NewMessageActivity.this.isDestroyed()) {
+                _progressDialog.dismiss();
+            }
         });
+        finish();
         Messages.toast(this, "Media uploaded.");
     }
 
     @Override
     public void onTransferError(Exception e) {
-        _progressDialog.dismiss();
+        if (!NewMessageActivity.this.isDestroyed()) {
+            _progressDialog.dismiss();
+        }
         Messages.toast(this, "Couldn't upload Media.");
     }
 
@@ -225,7 +228,6 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
         try {
             if (response.getBoolean(Constants.JSON_RESPONSE)) {
                 Messages.toast(this, "Sent.");
-                finish();
             } else {
                 Messages.toast(this, "Could not send.");
             }
