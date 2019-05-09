@@ -32,7 +32,7 @@ public class HTTPConnector {
      * Method to make the HTTP POST Request.
      */
     public void makeQuery(JSONObject postData) {
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, queryURL, postData, new Response.Listener<JSONObject>() {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, queryURL, postData, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 if (responseListener != null) {

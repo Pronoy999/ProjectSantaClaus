@@ -187,10 +187,11 @@ public class LoginActivity extends AppCompatActivity implements HTTPConnector.Re
      * Method to check the OTP.
      */
     private void checkPin() {
-        String url = Constants.API_URL + "?key=" + Constants.API_TOKEN +
-                "&phoneNumber=%2B91" + _mobileNumber.getText().toString() + "&otp=" + pinNumber;
+        String url = Constants.API_URL + "otp?phoneNumber=%2B91" +
+                _mobileNumber.getText().toString() + "&otp=" + pinNumber;
         connector = new HTTPConnector(this, url, this);
         currentCode = Constants.OTP_VERFIY_CODE;
+        connector.makeQuery();
         _progressDialog.show();
     }
 
@@ -229,6 +230,7 @@ public class LoginActivity extends AppCompatActivity implements HTTPConnector.Re
                 if (responseText.equalsIgnoreCase("OTP Send.") ||
                         responseText.equalsIgnoreCase("New OTP Send.")) {
                     Messages.toast(getApplicationContext(), "OTP SEND.");
+                    _otpLayout.setVisibility(View.VISIBLE);
                 } else {
                     Messages.toast(getApplicationContext(), "Something went wrong.");
                 }
