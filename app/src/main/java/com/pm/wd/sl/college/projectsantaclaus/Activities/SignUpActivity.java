@@ -8,7 +8,6 @@ import android.support.design.button.MaterialButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.EditText;
 
 import com.android.volley.VolleyError;
@@ -25,7 +24,7 @@ public class SignUpActivity extends AppCompatActivity implements HTTPConnector.R
 
     private EditText _fName, _lName, _email, _phone;
     private MaterialButton _registerButton;
-    private AppCompatButton _cancelButton;
+    private AppCompatButton _cancelButton, _loginButton;
     private ProgressDialog _progressDialog;
     private String TAG_CLASS = SignUpActivity.class.getSimpleName();
 
@@ -36,6 +35,10 @@ public class SignUpActivity extends AppCompatActivity implements HTTPConnector.R
         initializeViews();
         _registerButton.setOnClickListener(view -> getData());
         _cancelButton.setOnClickListener(v -> finish());
+        _loginButton.setOnClickListener(v -> {
+            startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+            finish();
+        });
     }
 
     /**
@@ -51,6 +54,7 @@ public class SignUpActivity extends AppCompatActivity implements HTTPConnector.R
         _progressDialog = new ProgressDialog(this);
         _progressDialog.setMessage("Loading...");
         _progressDialog.setCancelable(false);
+        _loginButton = findViewById(R.id.loginButton);
     }
 
     /**
@@ -89,7 +93,6 @@ public class SignUpActivity extends AppCompatActivity implements HTTPConnector.R
                 Messages.toast(getApplicationContext(), "User added Successfully.");
                 Thread thread = new Thread(() -> updateSharedPreferences());
                 thread.start();
-                //TODO: Change to User Home Activity.
                 startActivity(new Intent(SignUpActivity.this,
                         LoginActivity.class));
             }
