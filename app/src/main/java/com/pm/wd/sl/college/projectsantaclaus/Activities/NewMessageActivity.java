@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v7.app.AppCompatActivity;
@@ -45,6 +46,7 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
     private ImageView _newMsgImageView;
     private ImageView _newMsgSendButton;
     private TextInputLayout _toReceiverIL;
+    private FloatingActionButton _infoImage;
 
     private String imageFileName = "";
     private int originalSize = -1;
@@ -68,6 +70,8 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
         _newMsgImageView = findViewById(R.id.newMsgImageView);
         _newMsgSendButton = findViewById(R.id.newMsgSendButton);
         _toReceiverIL = findViewById(R.id.toReceiverIL);
+        _infoImage = findViewById(R.id.infoImage);
+        _infoImage.setAlpha(0.25f);
 
         _progressDialog = new ProgressDialog(this);
         _progressDialog.setMessage("Loading...");
@@ -92,6 +96,7 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
         }
 
         if (!isView) {
+            _infoImage.hide();
             _newMsgImageView.setOnClickListener(v -> startActivityForResult(FileUtils.newOpenImageIntent(false), 0xef54));
 
             _newMsgSendButton.setOnClickListener(v -> {
@@ -99,7 +104,6 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
                     Messages.toast(getApplicationContext(), "Enter a message to continue.");
                     return;
                 }
-                // todo encode image
                 uploadFileAndSendMessage();
                 setResult(RESULT_OK);
                 finish();
