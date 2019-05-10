@@ -123,8 +123,7 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
                 Message finalMsg = msg;
                 _infoImage.setOnClickListener(v -> {
                     Intent r = new Intent(NewMessageActivity.this, ImageInfoActivity.class).putExtra("param_message", finalMsg);
-
-
+                    startActivity(r);
                 });
             }
         }
