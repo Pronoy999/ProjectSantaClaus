@@ -3,8 +3,8 @@ package com.pm.wd.sl.college.projectsantaclaus.Helper;
 import com.amazonaws.regions.Regions;
 
 public class Constants {
-    //public static final String API_URL = "http://ec2-13-127-208-122.ap-south-1.compute.amazonaws.com/api/v1/";
-    public static final String API_URL = "http://192.168.0.169:7069/";
+    public static final String API_URL = "http://ec2-13-127-208-122.ap-south-1.compute.amazonaws.com/api/v6/";
+    //public static final String API_URL = "http://192.168.0.169:7069/";
     public static String API_TOKEN = "v15xbg5qscb7uy4e";
     public static final char DEFAULT_OTP_CHAR = ' ';
     public static final String SHARED_PREFERENCE_NAME = "fuckBH";

@@ -120,7 +120,10 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
                 Glide.with(this).load(msg.getUrl()).placeholder(cpd).into(_newMsgImageView);
                 _newMsgEditText.setText(msg.getMsg());
 
+                Message finalMsg = msg;
                 _infoImage.setOnClickListener(v -> {
+                    Intent r = new Intent(NewMessageActivity.this, ImageInfoActivity.class).putExtra("param_message", finalMsg);
+
 
                 });
             }
@@ -200,11 +203,14 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
     private void uploadFileAndSendMessage() {
         new Thread(() -> {
             String msgUrl = "";
+            String receiverEmail = _toReceiverEdit.getText().toString();
+            String senderEmail = MsgApp.instance().user.getEmail();
+            String msg = _newMsgEditText.getText().toString();
 
             if (!imageFileName.isEmpty()) {
                 Bitmap bitmap = BitmapFactory.decodeFile(imageFileName);
 
-                bitmap = LSBWatermarkUtils.watermark(bitmap, MsgApp.instance().user.getEmail());
+                bitmap = LSBWatermarkUtils.watermark(bitmap, "PSC_" + senderEmail + ":" + receiverEmail);
 //                bitmap = CompressionUtils.compress(bitmap);
 
                 try (FileOutputStream fos2 = new FileOutputStream(imageFileName)) {
@@ -223,11 +229,8 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
             String url = Constants.API_URL + "message/new";
             HTTPConnector connector = new HTTPConnector(NewMessageActivity.this, url,
                     NewMessageActivity.this);
-            String receiverEmail = _toReceiverEdit.getText().toString();
-            String sender = MsgApp.instance().user.getEmail();
-            String msg = _newMsgEditText.getText().toString();
             connector.makeQuery(ParamsCreator.createParamsForNewMessage(msg, receiverEmail,
-                    sender, msgUrl, originalSize, compressedSize));
+                    senderEmail, msgUrl, originalSize, compressedSize));
         }).start();
 
     }
