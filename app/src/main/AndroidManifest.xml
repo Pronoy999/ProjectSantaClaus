@@ -15,9 +15,9 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".ImageInfoActivity"
-            android:label="@string/title_activity_image_info"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:name=".Activities.ImageInfoActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.AppCompat.Dialog" />
         <activity android:name=".Activities.NewMessageActivity" />
         <activity
             android:name=".Activities.ConversationActivity"
