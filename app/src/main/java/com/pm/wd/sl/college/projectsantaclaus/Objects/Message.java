@@ -1,6 +1,9 @@
 package com.pm.wd.sl.college.projectsantaclaus.Objects;
 
-public class Message {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Message implements Parcelable {
     int id;
     String sendr_uid;
     String recvr_uid;
@@ -23,6 +26,48 @@ public class Message {
         this.original_size = originalSize;
         this.compressed_size = compressedSize;
         this.sender = sender;
+    }
+
+    public static final Creator<Message> CREATOR = new Creator<Message>() {
+        @Override
+        public Message createFromParcel(Parcel in) {
+            return new Message(in);
+        }
+
+        @Override
+        public Message[] newArray(int size) {
+            return new Message[size];
+        }
+    };
+
+    protected Message(Parcel in) {
+        id = in.readInt();
+        sendr_uid = in.readString();
+        recvr_uid = in.readString();
+        msg = in.readString();
+        url = in.readString();
+        date = in.readString();
+        time = in.readString();
+        original_size = in.readInt();
+        compressed_size = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(sendr_uid);
+        dest.writeString(recvr_uid);
+        dest.writeString(msg);
+        dest.writeString(url);
+        dest.writeString(date);
+        dest.writeString(time);
+        dest.writeInt(original_size);
+        dest.writeInt(compressed_size);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public String getDate() {
