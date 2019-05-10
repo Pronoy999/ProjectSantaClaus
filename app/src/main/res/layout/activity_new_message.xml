@@ -11,6 +11,7 @@
         android:id="@+id/toReceiverIL"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:hint="To:"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -19,23 +20,41 @@
             android:id="@+id/toReceiverEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="To:"
             android:inputType="textEmailAddress"
             android:textColor="@color/colorAccent"
             android:textSize="20sp"
             tools:text="xx@dd.cc" />
     </android.support.design.widget.TextInputLayout>
 
-    <ImageView
-        android:id="@+id/newMsgImageView"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:padding="64dp"
-        android:src="@drawable/ic_add_photo"
         app:layout_constraintBottom_toTopOf="@id/msgEditView"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toReceiverIL" />
+        app:layout_constraintTop_toBottomOf="@id/toReceiverIL">
+
+        <ImageView
+            android:id="@+id/newMsgImageView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_add_photo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/infoImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:srcCompat="@android:drawable/ic_dialog_info" />
+    </android.support.constraint.ConstraintLayout>
+
 
     <LinearLayout
         android:id="@+id/msgEditView"
@@ -49,8 +68,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:textSize="20sp"
             android:hint="Type your message..."
+            android:textSize="20sp"
             tools:text="HI HELLO STATRUS" />
 
         <com.pm.wd.sl.college.projectsantaclaus.Objects.SquareImageView

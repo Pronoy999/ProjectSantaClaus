@@ -3,7 +3,8 @@ package com.pm.wd.sl.college.projectsantaclaus.Helper;
 import com.amazonaws.regions.Regions;
 
 public class Constants {
-    public static final String API_URL = "http://ec2-13-127-208-122.ap-south-1.compute.amazonaws.com/api/v1/";
+    //public static final String API_URL = "http://ec2-13-127-208-122.ap-south-1.compute.amazonaws.com/api/v1/";
+    public static final String API_URL = "http://192.168.0.169:7069/";
     public static String API_TOKEN = "v15xbg5qscb7uy4e";
     public static final char DEFAULT_OTP_CHAR = ' ';
     public static final String SHARED_PREFERENCE_NAME = "fuckBH";
@@ -11,24 +12,30 @@ public class Constants {
 
     public static final int OTP_REQUEST_CODE = 1;
     public static final int OTP_VERFIY_CODE = 2;
-    public static final int NEW_MESSAGE_ACTIVITY_CODE=3;
-    public static final int NEW_CONVO_MSG_CODE=4;
+    public static final int NEW_MESSAGE_ACTIVITY_CODE = 3;
+    public static final int NEW_CONVO_MSG_CODE = 4;
+    public static final String BUCKET_URL = "https://s3.ap-south-1.amazonaws.com/santa-claus/%s";
     /**
      * JSON Constants.
      */
     public static final String JSON_PHONE_NUMBER = "phoneNumber";
     public static final String JSON_RESPONSE = "res";
+    public static final String JSON_MSG = "msg";
     public static final String FIRST_NAME = "first_name";
     public static final String LAST_NAME = "last_name";
     public static final String PHONE = "phone";
     public static final String EMAIL = "email";
     public static final String JSON_ID = "id";
+    public static final String JSON_USER_REG_DATE = "reg_date";
+    public static final String JSON_USER_REG_TIME = "reg_time";
     public static final String SENDER_EMAIl = "sender_email";
     public static final String RECEIVER_EMAIL = "receiver_email";
     public static final String MESSAGE = "message";
     public static final String MESSAGE_URL = "url";
-    public static final String MESSAGE_DATE = "message_date";
-    public static final String MESSAGE_TIME = "message_time";
+    public static final String MESSAGE_ORIG_SIZE = "original_size";
+    public static final String MESSAGE_COMP_SIZE = "compressed_size";
+    public static final String MESSAGE_DATE = "msg_date";
+    public static final String MESSAGE_TIME = "msg_time";
 
     /**
      * AWS Constants.

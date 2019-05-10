@@ -7,18 +7,17 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.android.volley.VolleyError;
+import com.pm.wd.sl.college.projectsantaclaus.Adapters.MessageAdapter;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.Constants;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.HTTPConnector;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.Messages;
 import com.pm.wd.sl.college.projectsantaclaus.Helper.ParamsCreator;
 import com.pm.wd.sl.college.projectsantaclaus.Objects.Message;
-import com.pm.wd.sl.college.projectsantaclaus.Adapters.MessageAdapter;
 import com.pm.wd.sl.college.projectsantaclaus.Objects.MsgApp;
+import com.pm.wd.sl.college.projectsantaclaus.Objects.User;
 import com.pm.wd.sl.college.projectsantaclaus.R;
 
 import org.json.JSONArray;
@@ -58,28 +57,20 @@ public class MessagesActivity extends AppCompatActivity implements HTTPConnector
         _progressDialog = new ProgressDialog(this);
         _progressDialog.setMessage("Loading...");
         _progressDialog.setCancelable(false);
-        _newMsgButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivityForResult(new Intent(MessagesActivity.this,
-                        NewMessageActivity.class), Constants.NEW_MESSAGE_ACTIVITY_CODE);
-            }
-        });
+        _newMsgButton.setOnClickListener(view -> startActivityForResult(new Intent(MessagesActivity.this,
+                NewMessageActivity.class), Constants.NEW_MESSAGE_ACTIVITY_CODE));
 
         _msgsView.setAdapter(userMsgsAdapter);
-        _msgsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Message msg = userMsgsAdapter.getItem(position);
-                if (msg != null) {
-                    String userId = msg.getSendrUid()
-                            .equalsIgnoreCase(MsgApp.instance().user.getEmail()) ?
-                            msg.getRecvrUid() : msg.getSendrUid();
+        _msgsView.setOnItemClickListener((parent, view, position, id) -> {
+            Message msg = userMsgsAdapter.getItem(position);
+            if (msg != null) {
+                String userId = msg.getSendrUid()
+                        .equalsIgnoreCase(MsgApp.instance().user.getEmail()) ?
+                        msg.getRecvrUid() : msg.getSendrUid();
 
-                    Intent intent = new Intent(MessagesActivity.this,
-                            ConversationActivity.class).putExtra("senderId", userId); // const
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(MessagesActivity.this,
+                        ConversationActivity.class).putExtra("senderId", userId); // const
+                startActivity(intent);
             }
         });
     }
@@ -90,7 +81,7 @@ public class MessagesActivity extends AppCompatActivity implements HTTPConnector
     private void fetchMessages() {
         String url = Constants.API_URL + "message/recent";
         HTTPConnector connector = new HTTPConnector(getApplicationContext(), url, this);
-        connector.makeQuery(ParamsCreator.createParamsForRecentMessages(MsgApp.instance().user.getEmail()));
+        connector.makeQuery(ParamsCreator.createParamsForRecentMessages(MsgApp.instance().user.getEmail()), true);
         _progressDialog.show();
     }
 
@@ -109,12 +100,21 @@ public class MessagesActivity extends AppCompatActivity implements HTTPConnector
             JSONArray array = response.getJSONArray(Constants.JSON_RESPONSE);
             for (int i = 0; i < array.length(); i++) {
                 JSONObject oneMessage = array.getJSONObject(i);
-                Message message = new Message(oneMessage.getInt(Constants.JSON_ID), oneMessage.getString(Constants.SENDER_EMAIl),
+                User user = new User(oneMessage.getString(Constants.FIRST_NAME),
+                        oneMessage.getString(Constants.LAST_NAME),
+                        oneMessage.getString(Constants.EMAIL),
+                        oneMessage.getString(Constants.PHONE),
+                        oneMessage.getString(Constants.JSON_USER_REG_DATE),
+                        oneMessage.getString(Constants.JSON_USER_REG_TIME));
+                Message message = new Message(oneMessage.getInt(Constants.JSON_ID),
+                        oneMessage.getString(Constants.SENDER_EMAIl),
                         oneMessage.getString(Constants.RECEIVER_EMAIL),
                         oneMessage.getString(Constants.MESSAGE),
                         oneMessage.getString(Constants.MESSAGE_URL),
                         oneMessage.getString(Constants.MESSAGE_DATE),
-                        oneMessage.getString(Constants.MESSAGE_TIME));
+                        oneMessage.getString(Constants.MESSAGE_TIME),
+                        oneMessage.getInt(Constants.MESSAGE_ORIG_SIZE),
+                        oneMessage.getInt(Constants.MESSAGE_COMP_SIZE), user);
                 userMsgs.add(message);
             }
             userMsgsAdapter.notifyDataSetChanged();

@@ -37,7 +37,6 @@ public class MessageAdapter extends ArrayAdapter<Message> {
             viewH._date = convertView.findViewById(R.id.msgDateView);
             viewH._time = convertView.findViewById(R.id.msgTimeView);
             viewH._msg = convertView.findViewById(R.id.msgMsgView);
-            viewH._img = convertView.findViewById(R.id.msgImageView);
 
             convertView.setTag(viewH);
         } else {
@@ -52,10 +51,6 @@ public class MessageAdapter extends ArrayAdapter<Message> {
             viewH._date.setText(msg.getDate());
             viewH._time.setText(msg.getTime());
             viewH._msg.setText(msg.getMsg());
-            Glide.with(getContext())
-                    .load(msg.getUrl())
-                    .apply(new RequestOptions().circleCrop())
-                    .into(viewH._img);
         }
 
         return convertView;
@@ -67,6 +62,5 @@ public class MessageAdapter extends ArrayAdapter<Message> {
         TextView _date;
         TextView _time;
         TextView _msg;
-        ImageView _img;
     }
 }

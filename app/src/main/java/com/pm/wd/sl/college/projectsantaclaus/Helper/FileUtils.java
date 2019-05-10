@@ -34,26 +34,15 @@ public class FileUtils {
     public static final String HIDDEN_PREFIX = ".";
     static final String TAG = "FileUtils";
     private static final boolean DEBUG = false; // Set to true to enable logging
-    public static Comparator<File> sComparator = new Comparator<File>() {
-        @Override
-        public int compare(File f1, File f2) {
-            return f1.getName().toLowerCase().compareTo(
-                    f2.getName().toLowerCase());
-        }
+    public static Comparator<File> sComparator = (f1, f2) -> f1.getName().toLowerCase().compareTo(
+            f2.getName().toLowerCase());
+    public static FileFilter sFileFilter = file -> {
+        final String fileName = file.getName();
+        return file.isFile() && !fileName.startsWith(HIDDEN_PREFIX);
     };
-    public static FileFilter sFileFilter = new FileFilter() {
-        @Override
-        public boolean accept(File file) {
-            final String fileName = file.getName();
-            return file.isFile() && !fileName.startsWith(HIDDEN_PREFIX);
-        }
-    };
-    public static FileFilter sDirFilter = new FileFilter() {
-        @Override
-        public boolean accept(File file) {
-            final String fileName = file.getName();
-            return file.isDirectory() && !fileName.startsWith(HIDDEN_PREFIX);
-        }
+    public static FileFilter sDirFilter = file -> {
+        final String fileName = file.getName();
+        return file.isDirectory() && !fileName.startsWith(HIDDEN_PREFIX);
     };
 
     public static String getExtension(String uri) {

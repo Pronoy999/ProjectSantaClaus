@@ -1,7 +1,5 @@
 package com.pm.wd.sl.college.projectsantaclaus.Helper;
 
-import com.pm.wd.sl.college.projectsantaclaus.Objects.Message;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -72,13 +70,15 @@ public class ParamsCreator {
      * @param url:           The URL of the Media.
      * @return jsonObject.
      */
-    public static JSONObject createParamsForNewMessage(String msg, String receiverEmail, String senderEmail, String url) {
+    public static JSONObject createParamsForNewMessage(String msg, String receiverEmail, String senderEmail, String url, int originalSize, int compressedSize) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put(Constants.MESSAGE, msg);
             jsonObject.put(Constants.RECEIVER_EMAIL, receiverEmail);
             jsonObject.put(Constants.SENDER_EMAIl, senderEmail);
             jsonObject.put(Constants.MESSAGE_URL, url);
+            jsonObject.put(Constants.MESSAGE_ORIG_SIZE, originalSize);
+            jsonObject.put(Constants.MESSAGE_COMP_SIZE, compressedSize);
         } catch (JSONException e) {
             e.printStackTrace();
             Messages.l(TAG_CLASS, e.toString());
