@@ -112,7 +112,9 @@ public class MessagesActivity extends AppCompatActivity implements HTTPConnector
                         oneMessage.getString(Constants.MESSAGE),
                         oneMessage.getString(Constants.MESSAGE_URL),
                         oneMessage.getString(Constants.MESSAGE_DATE),
-                        oneMessage.getString(Constants.MESSAGE_TIME), user);
+                        oneMessage.getString(Constants.MESSAGE_TIME),
+                        oneMessage.getInt(Constants.MESSAGE_ORIG_SIZE),
+                        oneMessage.getInt(Constants.MESSAGE_COMP_SIZE), user);
                 userMsgs.add(message);
             }
             userMsgsAdapter.notifyDataSetChanged();

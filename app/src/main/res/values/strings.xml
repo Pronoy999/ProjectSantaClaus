@@ -16,4 +16,5 @@
     <string name="title_activity_conversation">ConversationActivity</string>
     <string name="first_name">First Name</string>
     <string name="already_registered_signin">Already Registered?Signin</string>
+    <string name="title_activity_image_info">ImageInfoActivity</string>
 </resources>

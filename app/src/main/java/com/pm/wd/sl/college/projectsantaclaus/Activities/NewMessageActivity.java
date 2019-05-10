@@ -119,6 +119,10 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
             if (msg != null) {
                 Glide.with(this).load(msg.getUrl()).placeholder(cpd).into(_newMsgImageView);
                 _newMsgEditText.setText(msg.getMsg());
+
+                _infoImage.setOnClickListener(v -> {
+
+                });
             }
         }
     }
