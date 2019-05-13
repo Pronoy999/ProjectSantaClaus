@@ -8,6 +8,8 @@ import com.pm.wd.sl.college.projectsantaclaus.Helper.Messages;
 import com.pm.wd.sl.college.projectsantaclaus.Objects.Message;
 import com.pm.wd.sl.college.projectsantaclaus.R;
 
+import java.text.DecimalFormat;
+
 public class ImageInfoActivity extends AppCompatActivity {
     private TextView checksumValue;
     private TextView senderValue;
@@ -15,11 +17,19 @@ public class ImageInfoActivity extends AppCompatActivity {
     private TextView originalSizeValue;
     private TextView compressedSizeValue;
 
+    public static String readableFileSize(long size) {
+        if (size <= 0) return "0";
+        final String[] units = new String[]{"B", "kB", "MB", "GB", "TB"};
+        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+        return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_info);
-        this.setFinishOnTouchOutside(false);
+        this.setFinishOnTouchOutside(true);
+        this.setTitle("Image Information");
         Message msg;
 
         if (getIntent() == null ||
@@ -42,7 +52,7 @@ public class ImageInfoActivity extends AppCompatActivity {
         checksumValue.setText(msg.getUrl().substring(msg.getUrl().lastIndexOf("/") + 1));
         senderValue.setText(msg.getSendrUid()); // todo from watermark
         receiverValue.setText(msg.getRecvrUid()); // todo from watermark
-        originalSizeValue.setText(msg.getOriginalSize());
-        compressedSizeValue.setText(msg.getCompressedSize());
+        originalSizeValue.setText(readableFileSize(msg.getOriginalSize()));
+        compressedSizeValue.setText(readableFileSize(msg.getCompressedSize()));
     }
 }
