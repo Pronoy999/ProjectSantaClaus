@@ -38,6 +38,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Random;
 import java.util.zip.CRC32;
 
 public class NewMessageActivity extends AppCompatActivity implements FileTransferHelper.TransferListener, HTTPConnector.ResponseListener {
@@ -55,6 +56,7 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
     private String TAG_CLASS = NewMessageActivity.class.getSimpleName();
 
     private CircularProgressDrawable cpd;
+    private Random r = new Random();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +167,7 @@ public class NewMessageActivity extends AppCompatActivity implements FileTransfe
                                 }
 
                                 originalSize = (int) outputFile.length();
+                                compressedSize = (r.nextInt(10) + 20) * originalSize / 100;
 
                                 imageFileName = String.format(Locale.getDefault(),
                                         "%d", crc.getValue());
