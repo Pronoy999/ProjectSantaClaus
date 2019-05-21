@@ -17,7 +17,7 @@
         <activity
             android:name=".Activities.ImageInfoActivity"
             android:excludeFromRecents="true"
-            android:theme="@style/Theme.AppCompat.Dialog" />
+            android:theme="@style/Theme.AppCompat.Light.Dialog" />
         <activity android:name=".Activities.NewMessageActivity" />
         <activity
             android:name=".Activities.ConversationActivity"
